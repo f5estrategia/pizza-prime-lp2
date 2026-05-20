@@ -1,45 +1,73 @@
-# Pizza Prime — Landing Page (Deploy)
+# Welcome to your Lovable project
 
-Build de produção validado para **https://f5estrategia.github.io/pizza-prime-lp2/**.
+## Project info
 
-## Status do build
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-- React Router com `basename=/pizza-prime-lp2/` ✓
-- Vite `base=/pizza-prime-lp2/` ✓
-- Favicon, foto do fundador, JS, CSS e 404 SPA validados localmente ✓
-- `.nojekyll` incluído ✓
+## How can I edit this code?
 
-## Como publicar (recomendado: git)
+There are several ways of editing your application.
 
-A UI web do GitHub filtra arquivos ocultos (`.nojekyll` não sobe via drag-and-drop), então o git é o caminho seguro:
+**Use Lovable**
 
-```bash
-cd "pizza-prime-lp2"
-git init
-git add .
-git commit -m "Deploy: build com basename e foto do fundador corrigidos"
-git branch -M main
-git remote add origin https://github.com/f5estrategia/pizza-prime-lp2.git
-git push -u origin main --force
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-> O `--force` substitui o build antigo (que apontava para `/pizza-prime-lp/`).
+**Edit a file directly in GitHub**
 
-## Alternativa: UI web do GitHub
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-1. No repo `pizza-prime-lp2`, **apague todos os arquivos antigos** (eles referenciam `/pizza-prime-lp/` que não existe).
-2. Arraste o conteúdo desta pasta na UI de upload.
-3. Crie o `.nojekyll` manualmente: **Add file → Create new file → nome `.nojekyll` → conteúdo vazio → Commit**.
+**Use GitHub Codespaces**
 
-## Depois do push
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-1. Aguarde 1–2 minutos.
-2. Abra https://f5estrategia.github.io/pizza-prime-lp2/ com **Ctrl+Shift+R** (hard refresh, evita cache do build antigo).
+## What technologies are used for this project?
 
-## Conteúdo da pasta
+This project is built with:
 
-- `index.html` + `404.html` — entry + fallback SPA
-- `.nojekyll` — desabilita Jekyll no GitHub Pages
-- `assets/` — JS, CSS e todas as imagens com hash de cache
-- `lovable-uploads/05634cf5-...jpg` — foto do fundador (referenciada via path absoluto no código)
-- `favicon.ico`, `placeholder.svg`, `robots.txt`
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
+
+## How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

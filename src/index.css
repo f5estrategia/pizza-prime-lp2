@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 5%;
+
+    --popover: 0 0% 98%;
+    --popover-foreground: 0 0% 5%;
+
+    --primary: 3 73% 30%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 47 98% 52%;
+    --secondary-foreground: 0 0% 5%;
+
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 47 98% 52%;
+    --accent-foreground: 0 0% 5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 3 73% 30%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 0 0% 5%;
+    --sidebar-primary: 3 73% 30%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 93%;
+    --sidebar-accent-foreground: 0 0% 5%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 3 73% 30%;
+
+    --brand-white: 0 0% 100%;
+    --brand-red: 3 73% 30%;
+    --brand-yellow: 47 98% 52%;
+    --brand-dark: 0 0% 5%;
+
+    --whatsapp: 142 70% 40%;
+    --whatsapp-hover: 142 70% 30%;
+    --whatsapp-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Roboto Slab', serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(47 98% 52%), hsl(42 90% 60%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-brand-white {
+    background-color: hsl(0 0% 100%);
+  }
+
+  .bg-brand-red {
+    background-color: hsl(3 73% 30%);
+  }
+
+  .bg-brand-yellow {
+    background-color: hsl(47 98% 52%);
+  }
+
+  .bg-brand-dark {
+    background-color: hsl(0 0% 5%);
+  }
+
+  .shadow-gold {
+    box-shadow: 0 0 30px -5px hsl(47 98% 52% / 0.3);
+  }
+
+  .shadow-red {
+    box-shadow: 0 0 30px -5px hsl(3 73% 30% / 0.3);
+  }
+}
