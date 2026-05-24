@@ -3,20 +3,29 @@ import { motion } from "framer-motion";
 import logoPizzaPrime from "@/assets/logo-pizza-prime.png";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
+const WHATSAPP_REDIRECT_URL =
+  "https://api.whatsapp.com/send/?phone=5511973291171&text=Ol%C3%A1%21+Acabei+de+preencher+o+formul%C3%A1rio+e+gostaria+de+falar+com+um+consultor.&type=phone_number&app_absent=0";
+
 const Obrigado = () => {
   useEffect(() => {
+    // 1. Dispara o evento de conversão (Google Ads / GA4 / Meta Pixel via GTM)
     (window as any).dataLayer = (window as any).dataLayer || [];
     (window as any).dataLayer.push({
       event: 'conversion_obrigado',
       page: '/obrigado'
     });
+
+    // 2. Redireciona automaticamente para o WhatsApp após 3s
+    //    (tempo suficiente para os tags de conversão completarem o request)
+    const redirectTimer = setTimeout(() => {
+      window.location.href = WHATSAPP_REDIRECT_URL;
+    }, 3000);
+
+    return () => clearTimeout(redirectTimer);
   }, []);
 
   const handleWhatsApp = () => {
-    window.open(
-      "https://wa.me/5511973291171?text=Olá! Acabei de preencher o formulário e gostaria de falar com um consultor.",
-      "_blank",
-    );
+    window.location.href = WHATSAPP_REDIRECT_URL;
   };
 
   return (
@@ -34,7 +43,7 @@ const Obrigado = () => {
         <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-8">Em breve nosso time entrará em contato</p>
 
         <p className="text-primary-foreground/80 text-base sm:text-lg mb-8">
-          Caso prefira falar conosco agora, clique no botão abaixo
+          Você será direcionado para o WhatsApp em instantes — ou clique no botão abaixo para ir agora.
         </p>
 
         <WhatsAppButton onClick={handleWhatsApp} className="text-lg sm:text-xl px-8 py-5">

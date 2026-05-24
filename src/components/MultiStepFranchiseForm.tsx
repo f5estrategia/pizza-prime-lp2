@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio
 declare global {
@@ -10,9 +11,9 @@ declare global {
 }
 
 const MultiStepFranchiseForm = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -89,14 +90,10 @@ const MultiStepFranchiseForm = () => {
       console.warn("Erro no tracking, seguindo com o redirecionamento.", err);
     }
 
-    // Feedback visual
-    setShowPopup(true);
-
-    // Redirecionamento para WhatsApp após 3 segundos
-    setTimeout(() => {
-      const whatsappUrl = `https://api.whatsapp.com/send/?phone=5511973291171&text=Ol%C3%A1%21+Acabei+de+preencher+o+formul%C3%A1rio+e+gostaria+de+falar+com+um+consultor.&type=phone_number&app_absent=0`;
-      window.location.href = whatsappUrl;
-    }, 3000);
+    // Redireciona para a página de obrigado (URL única de conversão).
+    // Os eventos acima já dispararam; a navegação client-side não recarrega
+    // a página, então as requisições de tracking seguem em andamento.
+    navigate("/obrigado");
   };
 
   const handleNextStep = () => {
@@ -244,33 +241,6 @@ const MultiStepFranchiseForm = () => {
           </div>
         )}
       </form>
-
-      {/* POPUP DE SUCESSO */}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-[9999] px-4 backdrop-blur-sm">
-          <div className="bg-white p-8 rounded-lg text-center shadow-2xl max-w-sm w-full animate-in zoom-in duration-300 border-t-8 border-[#FF8C00]">
-            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-10 w-10"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={3}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Obrigado pelo cadastro!</h3>
-            <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-              Você será redirecionado para falar com um consultor no WhatsApp agora.
-            </p>
-            <div className="flex justify-center">
-              <div className="animate-spin h-8 w-8 border-4 border-[#FF8C00] border-t-transparent rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
