@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio
+// Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio.
+// O Meta Pixel é disparado exclusivamente pelo GTM (GTM-PCL98LNF), não direto aqui.
 declare global {
   interface Window {
     dataLayer: any[];
-    fbq: any;
   }
 }
 
@@ -74,15 +74,11 @@ const MultiStepFranchiseForm = () => {
         keepalive: true,
       }).catch((err) => console.error("Erro ao gravar na planilha:", err));
 
-      // 2. Meta Pixel (Evento de Lead)
-      if (typeof window !== "undefined" && typeof window.fbq === "function") {
-        window.fbq("track", "Lead", {
-          content_name: "Franquia Pizza Prime",
-          status: formData.objetivo,
-        });
-      }
-
-      // 3. Google Tag Manager
+      // 2. Google Tag Manager — fonte única do rastreio.
+      //    O evento "form_submit" aciona no GTM as tags do Meta Pixel
+      //    (Complete Registration / Cadastro e Form_submit) e demais conversões.
+      //    O Lead do Pixel é disparado pelo GTM na página /obrigado
+      //    (evento "conversion_obrigado"), evitando contagem dupla.
       if (typeof window !== "undefined" && window.dataLayer) {
         window.dataLayer.push({ event: "form_submit", ...formData });
       }
