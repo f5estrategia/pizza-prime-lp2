@@ -6,7 +6,6 @@ declare global {
   interface Window {
     dataLayer: any[];
     fbq: any;
-    RdIntegration: any;
   }
 }
 
@@ -54,27 +53,28 @@ const MultiStepFranchiseForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ENVIO FINAL (WEBHOOK + RASTREIO)
+  // ENVIO FINAL (PLANILHA + RASTREIO)
   const executeSubmission = async () => {
     if (isSubmitting) return; // Evita os 3 disparos do Lovable
     setIsSubmitting(true);
 
-    const WEBHOOK_URL = "https://hook.us1.make.com/6lfyc0mr01e2xj05k16lby94zkajuvja";
+    // Google Apps Script (Web App) — grava direto na planilha de leads.
+    const SHEET_ENDPOINT =
+      "https://script.google.com/macros/s/AKfycbwW2C1Ue0bp9-ok-kVmN3fGCstoFIZoynt31AKAxjjLKQ8yC9FJRTVBpTpO3pqTydj7/exec";
 
     try {
-      // 1. Envio para o Make.com (Webhook)
-      fetch(WEBHOOK_URL, {
+      // 1. Grava o lead na planilha (Apps Script).
+      //    Content-Type "text/plain" evita o preflight CORS que o Apps Script
+      //    não responde; o script lê o corpo via e.postData.contents.
+      //    keepalive garante a entrega mesmo durante a navegação seguinte.
+      await fetch(SHEET_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(formData),
-      }).catch((err) => console.error("Erro Webhook:", err));
+        keepalive: true,
+      }).catch((err) => console.error("Erro ao gravar na planilha:", err));
 
-      // 2. Envio RD Station
-      if (typeof window !== "undefined" && window.RdIntegration) {
-        window.RdIntegration.post(formData);
-      }
-
-      // 3. Meta Pixel (Evento de Lead)
+      // 2. Meta Pixel (Evento de Lead)
       if (typeof window !== "undefined" && typeof window.fbq === "function") {
         window.fbq("track", "Lead", {
           content_name: "Franquia Pizza Prime",
@@ -82,7 +82,7 @@ const MultiStepFranchiseForm = () => {
         });
       }
 
-      // 4. Google Tag Manager
+      // 3. Google Tag Manager
       if (typeof window !== "undefined" && window.dataLayer) {
         window.dataLayer.push({ event: "form_submit", ...formData });
       }
@@ -91,8 +91,6 @@ const MultiStepFranchiseForm = () => {
     }
 
     // Redireciona para a página de obrigado (URL única de conversão).
-    // Os eventos acima já dispararam; a navegação client-side não recarrega
-    // a página, então as requisições de tracking seguem em andamento.
     navigate("/obrigado");
   };
 

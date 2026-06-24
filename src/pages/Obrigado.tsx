@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { Instagram } from "lucide-react";
 import logoPizzaPrime from "@/assets/logo-pizza-prime.png";
-import WhatsAppButton from "@/components/WhatsAppButton";
 
-const WHATSAPP_REDIRECT_URL =
-  "https://api.whatsapp.com/send/?phone=5511973291171&text=Ol%C3%A1%21+Acabei+de+preencher+o+formul%C3%A1rio+e+gostaria+de+falar+com+um+consultor.&type=phone_number&app_absent=0";
+const INSTAGRAM_REDIRECT_URL =
+  "https://www.instagram.com/pizza.prime.franquia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
 
 const Obrigado = () => {
   useEffect(() => {
@@ -15,17 +15,17 @@ const Obrigado = () => {
       page: '/obrigado'
     });
 
-    // 2. Redireciona automaticamente para o WhatsApp após 3s
+    // 2. Redireciona automaticamente para o Instagram após 5s
     //    (tempo suficiente para os tags de conversão completarem o request)
     const redirectTimer = setTimeout(() => {
-      window.location.href = WHATSAPP_REDIRECT_URL;
-    }, 3000);
+      window.location.href = INSTAGRAM_REDIRECT_URL;
+    }, 5000);
 
     return () => clearTimeout(redirectTimer);
   }, []);
 
-  const handleWhatsApp = () => {
-    window.location.href = WHATSAPP_REDIRECT_URL;
+  const handleInstagram = () => {
+    window.location.href = INSTAGRAM_REDIRECT_URL;
   };
 
   return (
@@ -38,17 +38,23 @@ const Obrigado = () => {
       >
         <img src={logoPizzaPrime} alt="Pizza Prime" className="h-20 sm:h-28 mx-auto mb-10" />
 
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-foreground mb-4">Parabéns!</h1>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-foreground mb-4">Obrigado pelo contato!</h1>
 
-        <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-8">Em breve nosso time entrará em contato</p>
-
-        <p className="text-primary-foreground/80 text-base sm:text-lg mb-8">
-          Você será direcionado para o WhatsApp em instantes — ou clique no botão abaixo para ir agora.
+        <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-8">
+          Recebemos seus dados e em breve nosso time entrará em contato.
         </p>
 
-        <WhatsAppButton onClick={handleWhatsApp} className="text-lg sm:text-xl px-8 py-5">
-          Chamar no WhatsApp
-        </WhatsAppButton>
+        <p className="text-primary-foreground/80 text-base sm:text-lg mb-8">
+          Você será redirecionado para o nosso Instagram em instantes — ou clique no botão abaixo para ir agora.
+        </p>
+
+        <button
+          onClick={handleInstagram}
+          className="inline-flex items-center justify-center gap-3 font-bold text-lg sm:text-xl px-8 py-5 rounded-lg text-white bg-gradient-to-r from-[#feda75] via-[#d62976] to-[#4f5bd5] hover:opacity-90 transition-all active:scale-95 shadow-md"
+        >
+          <Instagram className="w-6 h-6" />
+          Seguir no Instagram
+        </button>
 
         <a
           href="https://lp.pizzaprime.com.br"
