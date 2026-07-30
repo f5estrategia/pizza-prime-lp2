@@ -6,7 +6,7 @@ import seloPegn from "@/assets/selo-pegn.png";
 
 const badges = [
 { image: seloAbf, text: "Selo ABF Excelência em Franchising 2024 e 2025" },
-{ image: seloTop25, text: "Top 3 faturamento no iFood categoria pizzarias" },
+{ image: seloTop25, text: "Top 25 do Franchising Brasileiro · 2025" },
 { image: seloExame, text: "Prêmio negócios em expansão - Categoria de 2 a 5 milhões de reais" },
 { image: seloPegn, text: "95% dos franqueados satisfeitos" }];
 
