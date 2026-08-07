@@ -1,18 +1,23 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import logoPizzaPrime from "@/assets/logo-pizza-prime.png";
+import { buildUserData } from "@/lib/tracking";
 
 const INSTAGRAM_REDIRECT_URL =
   "https://www.instagram.com/pizza.prime.franquia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
 
 const Obrigado = () => {
   useEffect(() => {
-    // 1. Dispara o evento de conversão (Google Ads / GA4 / Meta Pixel via GTM)
+    // 1. Dispara o evento de conversão (Google Ads / GA4 / Meta Pixel via GTM).
+    //    O user_data leva e-mail, telefone, nome e geo já normalizados: sem ele
+    //    o Lead saía sem nenhum parâmetro de identificação.
     (window as any).dataLayer = (window as any).dataLayer || [];
     (window as any).dataLayer.push({
       event: 'conversion_obrigado',
-      page: '/obrigado'
+      page: '/obrigado',
+      user_data: buildUserData(),
     });
 
     // 2. Redireciona automaticamente para o Instagram após 5s
@@ -56,12 +61,14 @@ const Obrigado = () => {
           Seguir no Instagram
         </button>
 
-        <a
-          href="https://lp.pizzaprime.com.br"
+        {/* Rota interna: o basename do Router resolve para /pizza-prime-lp2/,
+            entao o link acompanha o dominio onde a LP estiver publicada. */}
+        <Link
+          to="/"
           className="block mt-6 text-primary-foreground/80 hover:text-primary-foreground underline underline-offset-4 transition-colors text-base sm:text-lg"
         >
           Voltar para o site
-        </a>
+        </Link>
       </motion.div>
     </div>
   );

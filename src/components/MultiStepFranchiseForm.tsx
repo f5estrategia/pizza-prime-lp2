@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { salvarLead, buildUserData, getFbc, getFbp, getExternalId } from "@/lib/tracking";
 
 // Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio.
 // O Meta Pixel é disparado exclusivamente pelo GTM (GTM-PCL98LNF), não direto aqui.
@@ -30,6 +31,13 @@ const MultiStepFranchiseForm = () => {
     utm_term: "",
     data_conversao: "",
     identificador: "formulario-lp-franquia",
+    // Identificadores de atribuição: permitem reconciliar o lead da planilha
+    // com o clique no Meta/Google (upload de conversão offline e CAPI).
+    fbclid: "",
+    gclid: "",
+    fbc: "",
+    fbp: "",
+    external_id: "",
   });
 
   // Captura UTMs da URL e define a Data da Conversão
@@ -45,6 +53,11 @@ const MultiStepFranchiseForm = () => {
       utm_campaign: params.get("utm_campaign") || "",
       utm_content: params.get("utm_content") || "",
       utm_term: params.get("utm_term") || "",
+      fbclid: params.get("fbclid") || "",
+      gclid: params.get("gclid") || "",
+      fbc: getFbc(),
+      fbp: getFbp(),
+      external_id: getExternalId(),
     }));
   }, []);
 
@@ -74,13 +87,27 @@ const MultiStepFranchiseForm = () => {
         keepalive: true,
       }).catch((err) => console.error("Erro ao gravar na planilha:", err));
 
-      // 2. Google Tag Manager — fonte única do rastreio.
+      // 2. Persiste o lead normalizado para enriquecer os eventos seguintes
+      //    (o Lead em /obrigado e os PageViews das proximas visitas).
+      salvarLead({
+        nome: formData.nome,
+        email: formData.email,
+        telefone: formData.telefone,
+        cidade: formData.cidade,
+      });
+
+      // 3. Google Tag Manager — fonte única do rastreio.
       //    O evento "form_submit" aciona no GTM as tags do Meta Pixel
       //    (Complete Registration / Cadastro e Form_submit) e demais conversões.
       //    O Lead do Pixel é disparado pelo GTM na página /obrigado
       //    (evento "conversion_obrigado"), evitando contagem dupla.
+      //    O user_data vai junto para a Correspondência Avançada do Pixel.
       if (typeof window !== "undefined" && window.dataLayer) {
-        window.dataLayer.push({ event: "form_submit", ...formData });
+        window.dataLayer.push({
+          event: "form_submit",
+          ...formData,
+          user_data: buildUserData(),
+        });
       }
     } catch (err) {
       console.warn("Erro no tracking, seguindo com o redirecionamento.", err);

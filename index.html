@@ -23,6 +23,59 @@
     <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/99d619e4-0128-4bba-9cb7-fb2a3e0a24fa/id-preview-cae0f54e--2aa0ec12-86f3-4339-9a72-777542f955c3.lovable.app-1772822910041.png">
     <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/99d619e4-0128-4bba-9cb7-fb2a3e0a24fa/id-preview-cae0f54e--2aa0ec12-86f3-4339-9a72-777542f955c3.lovable.app-1772822910041.png">
 
+    <!--
+      Correspondencia avancada do Meta Pixel.
+      PRECISA rodar antes do snippet do GTM: o PageView dispara junto com o
+      gtm.js e so enxerga o que ja estiver na dataLayer. Empurra external_id,
+      fbc, fbp e o cache de geo/lead. Mapear em GTM -> Variavel de camada de
+      dados "user_data" -> campos de Correspondencia Avancada do Pixel.
+    -->
+    <script>
+      (function () {
+        var DIA = 864e5, ANO = 365 * DIA;
+        function ler(n) {
+          var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)");
+          return m ? decodeURIComponent(m[2]) : "";
+        }
+        function gravar(n, v, ms) {
+          document.cookie = n + "=" + encodeURIComponent(v) +
+            ";expires=" + new Date(Date.now() + ms).toUTCString() +
+            ";path=/;SameSite=Lax";
+        }
+
+        // external_id: cookie proprio de 1 ano. E o parametro que mais levanta a nota.
+        var eid = ler("_f5eid");
+        if (!eid) eid = "f5." + Date.now().toString(36) + "." + Math.random().toString(36).slice(2, 10);
+        gravar("_f5eid", eid, ANO);
+
+        // fbc: so existe se o visitante chegou com fbclid. Persistimos por 90 dias
+        // para que a visita seguinte (organica/direta) ainda carregue a atribuicao.
+        var fbclid = new URLSearchParams(location.search).get("fbclid");
+        var fbc = ler("_fbc");
+        if (fbclid && !fbc) fbc = "fb.1." + Date.now() + "." + fbclid;
+        try {
+          if (!fbc) fbc = localStorage.getItem("pp_fbc") || "";
+          if (fbc) localStorage.setItem("pp_fbc", fbc);
+        } catch (e) {}
+        if (fbc) gravar("_fbc", fbc, 90 * DIA);
+
+        var ud = { external_id: eid };
+        if (fbc) ud.fbc = fbc;
+        var fbp = ler("_fbp");
+        if (fbp) ud.fbp = fbp;
+
+        try {
+          var geo = JSON.parse(localStorage.getItem("pp_geo") || "null");
+          if (geo) { if (geo.ct) ud.ct = geo.ct; if (geo.st) ud.st = geo.st; if (geo.country) ud.country = geo.country; }
+          var lead = JSON.parse(localStorage.getItem("pp_lead_ud") || "null");
+          if (lead) { if (lead.em) ud.em = lead.em; if (lead.ph) ud.ph = lead.ph; if (lead.fn) ud.fn = lead.fn; }
+        } catch (e) {}
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: "user_data_ready", user_data: ud });
+      })();
+    </script>
+
     <!-- Google Tag Manager -->
     <script>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
