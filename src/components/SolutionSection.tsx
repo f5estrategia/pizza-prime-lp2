@@ -7,7 +7,7 @@ import pizzaTableBg from "@/assets/pizza-table-overhead.jpg";
 import WhatsAppButton from "./WhatsAppButton";
 
 const highlights = [
-  { icon: CheckCircle, title: "+80 unidades", text: "Sistema testado e validado em operação real" },
+  { icon: CheckCircle, title: "+100 unidades", text: "Sistema testado e validado em operação real" },
   { icon: Clock, title: "15 anos de mercado", text: "Duas décadas de experiência e evolução contínua" },
   { icon: ShieldCheck, title: "30 unidades próprias", text: "Processos qualificados continuamente pela rede própria" },
 ];
@@ -42,7 +42,7 @@ const SolutionSection = () => {
             <span className="text-[#861B15]">já funciona?</span>
           </h2>
           <p className="text-lg text-[#0E0E0E]/60 max-w-2xl mx-auto">
-            Mais que uma promessa, somos um sistema testado em +80 unidades
+            Mais que uma promessa, somos um sistema testado em +100 unidades
           </p>
         </motion.div>
 

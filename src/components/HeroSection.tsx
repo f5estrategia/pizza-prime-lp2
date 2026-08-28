@@ -4,8 +4,8 @@ import heroBg from "@/assets/pizza-prime-300.png";
 import WhatsAppButton from "./WhatsAppButton";
 
 const stats = [
-{ value: "80+", label: "Unidades em operação" },
-{ value: "10", label: "Estados brasileiros" },
+{ value: "100+", label: "Unidades no Brasil e América Latina" },
+{ value: "11", label: "Estados brasileiros" },
 { value: "R$ 3MM", label: "Faturamento médio anual/loja" },
 { value: "Desde 2020", label: "No mercado" }];
 
@@ -45,7 +45,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-xl text-white/90 mb-6 max-w-3xl leading-relaxed font-extralight md:text-lg">
 
-            Modelo testado em +80 unidades, suporte completo e
+            Modelo testado em +100 unidades, suporte completo e
 marca reconhecida nacionalmente.   
 
           </motion.p>

@@ -23,7 +23,7 @@ const MarketNumbers = () => {
             <span className="font-bold text-primary">O Brasil é o 2º maior consumidor de pizza do mundo.</span> São mais de 160 mil pizzarias e mais de 204 milhões de pizzas vendidas por mês no país. Só no primeiro semestre de 2025, foram 54 milhões de pedidos de pizza via delivery no iFood.
           </p>
           <p className="text-[#0E0E0E]/70 max-w-3xl mx-auto">
-            O setor de delivery deve ultrapassar US$ 21 bilhões em receita em 2025, com projeção de crescimento de 7% ao ano. A Pizza Prime ocupa uma posição única nesse cenário: é a maior rede brasileira de pizzarias, com capital 100% nacional, presente em 10 estados com mais de 80 unidades.
+            O setor de delivery deve ultrapassar US$ 21 bilhões em receita em 2025, com projeção de crescimento de 7% ao ano. A Pizza Prime ocupa uma posição única nesse cenário: é a maior rede brasileira de pizzarias, com capital 100% nacional, presente em 11 estados, com mais de 100 unidades no Brasil e na América Latina.
           </p>
         </motion.div>
 
