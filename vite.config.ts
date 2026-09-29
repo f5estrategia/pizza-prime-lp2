@@ -5,8 +5,9 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Publicado em GitHub Pages como project page: https://f5estrategia.github.io/pizza-prime-lp2/
-  base: "/pizza-prime-lp2/",
+  // Vercel (dominio oficial lp.pizzaprime.com.br) serve na raiz; a Vercel define VERCEL=1 no build.
+  // GitHub Pages publica como project page: https://f5estrategia.github.io/pizza-prime-lp2/
+  base: process.env.VERCEL ? "/" : "/pizza-prime-lp2/",
   server: {
     host: "::",
     port: 8080,

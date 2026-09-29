@@ -61,8 +61,8 @@ const Obrigado = () => {
           Seguir no Instagram
         </button>
 
-        {/* Rota interna: o basename do Router resolve para /pizza-prime-lp2/,
-            entao o link acompanha o dominio onde a LP estiver publicada. */}
+        {/* Rota interna: o basename do Router segue o base do build (/ na Vercel,
+            /pizza-prime-lp2/ no GitHub Pages), entao o link acompanha o dominio. */}
         <Link
           to="/"
           className="block mt-6 text-primary-foreground/80 hover:text-primary-foreground underline underline-offset-4 transition-colors text-base sm:text-lg"
