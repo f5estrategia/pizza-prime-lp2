@@ -104,7 +104,7 @@ const FranchiseModels = () => {
 
   return (
     <>
-      <section className="py-20 lg:py-28 bg-brand-dark">
+      <section id="modelos" className="py-20 lg:py-28 bg-brand-dark">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

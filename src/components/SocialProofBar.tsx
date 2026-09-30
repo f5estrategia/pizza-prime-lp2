@@ -16,7 +16,7 @@ const badges = [
 
 
 const SocialProofBar = () =>
-  <section className="bg-brand-yellow py-10 border-y border-[#0E0E0E]/10">
+  <section id="conquistas" className="bg-brand-yellow py-10 border-y border-[#0E0E0E]/10">
     <div className="container mx-auto px-4">
       <h2 className="text-4xl md:text-5xl font-extrabold text-center text-[#0E0E0E] mb-10">CONQUISTAS</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-start justify-items-center">

@@ -32,7 +32,7 @@ const DifferentialsSection = () => {
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-[#F0F0F0]">
+    <section id="diferenciais" className="py-20 lg:py-28 bg-[#F0F0F0]">
       <div className="container mx-auto px-4">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
           <p className="text-primary font-bold uppercase tracking-widest text-sm mb-2">Franquia 360°</p>

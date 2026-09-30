@@ -13,8 +13,17 @@ import FAQSection from "@/components/FAQSection";
 import StepsSection from "@/components/StepsSection";
 import CTAFormSection from "@/components/CTAFormSection";
 import Footer from "@/components/Footer";
+import { useEffect } from "react";
 
-const Index = () => (
+const Index = () => {
+  // Links extras do Google apontam para secoes (#modelos, #faq...). As secoes so
+  // existem depois do React montar, entao o navegador nao rola sozinho ate a ancora.
+  useEffect(() => {
+    const alvo = window.location.hash && document.getElementById(window.location.hash.slice(1));
+    if (alvo) setTimeout(() => alvo.scrollIntoView({ behavior: "smooth" }), 300);
+  }, []);
+
+  return (
   <main>
     {/* Dobra 1 - Hero */}
     <HeroSection />
@@ -46,6 +55,7 @@ const Index = () => (
     <StepsSection />
     <Footer />
   </main>
-);
+  );
+};
 
 export default Index;

@@ -29,7 +29,7 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-20 lg:py-28 bg-brand-white">
+    <section id="faq" className="py-20 lg:py-28 bg-brand-white">
       <div className="container mx-auto px-4 max-w-3xl">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground">
