@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     q: "Como avaliar a segurança e o potencial de retorno deste investimento?",
-    a: "O modelo Smart Delivery da Pizza Prime foi desenvolvido com base em processos padronizados, inteligência operacional e aprendizado acumulado em diferentes mercados, permitindo uma operação enxuta, replicável e escalável.\n\nO investimento inicial parte de R$ 199 mil, com payback estimado entre 18 e 24 meses. A operação apresenta lucratividade média entre 12% e 16% sobre o faturamento, com break-even projetado entre 3 e 6 meses, conforme a maturação da unidade.\n\nMais do que projeções, o franqueado conta com:\n\n• Modelo operacional simplificado\n• Gestão orientada por indicadores\n• Estratégia comercial validada em rede\n• Acompanhamento contínuo da franqueadora",
+    a: "Os modelos da Pizza Prime foram desenvolvidos com base em processos padronizados, inteligência operacional e aprendizado acumulado em diferentes mercados, permitindo uma operação enxuta, replicável e escalável.\n\nO modelo Delivery, foco da expansão da rede, tem investimento inicial a partir de R$ 249 mil, com payback estimado entre 18 e 24 meses. A operação apresenta lucratividade média entre 12% e 16% sobre o faturamento, com break-even projetado entre 3 e 6 meses, conforme a maturação da unidade.\n\nMais do que projeções, o franqueado conta com:\n\n• Modelo operacional simplificado\n• Gestão orientada por indicadores\n• Estratégia comercial validada em rede\n• Acompanhamento contínuo da franqueadora",
   },
   {
     q: "Não tenho tempo para ficar o dia todo na loja.",

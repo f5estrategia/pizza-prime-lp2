@@ -1,17 +1,19 @@
 import { motion } from "framer-motion";
-import { MapPin, Truck, Store, ChefHat, Check, X as XIcon } from "lucide-react";
+import { MapPin, Truck, Store, Bike, Check, X as XIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import mogiPhoto from "@/assets/mogi-das-cruzes.jpg";
 
+// Modelos e valores conforme material oficial do cliente: foco comercial no Delivery,
+// Smart restrito a cidades de ate 50 mil habitantes, Express a partir de R$ 369 mil.
 const models = [
   {
-    id: "smart",
-    name: "Smart Delivery",
+    id: "delivery",
+    name: "Delivery",
     icon: Truck,
-    subtitle: "Delivery + Retirada (Take Away)",
-    investment: "R$ 199 mil",
-    area: "Compacto",
+    subtitle: "Delivery + Retirada (Take Away), sem salão",
+    investment: "R$ 249 mil",
+    area: "Até 60 m²",
     salao: false,
     rodizio: false,
     alacarte: false,
@@ -20,13 +22,37 @@ const models = [
     lucratividade: "12% a 16%",
     payback: "18 a 24 meses",
     extras: "R$ 50k (capital de giro + estoque inicial)",
-    total: "R$ 250k",
+    total: "R$ 299k",
     featured: true,
     highlights: [
-      "Formato compacto, econômico, altamente eficiente e rentável",
-      "Lucratividade de 12% a 16% (muito lucrativo)",
-      "Sem necessidade de mão de obra especializada",
+      "Para quem quer começar com operação enxuta e alta rentabilidade",
+      "Modelo de até 60 m², foco total em delivery e retirada",
+      "Faturamento médio mensal de R$ 250 mil",
+      "Lucratividade de 12% a 16%",
       "Payback estimado: 18 a 24 meses",
+    ],
+  },
+  {
+    id: "smart",
+    name: "Smart Delivery",
+    icon: Bike,
+    subtitle: "Delivery + Retirada para cidades de até 50 mil habitantes",
+    investment: "R$ 199 mil",
+    area: "Compacto",
+    salao: false,
+    rodizio: false,
+    alacarte: false,
+    delivery: true,
+    retirada: true,
+    lucratividade: "—",
+    payback: "—",
+    extras: "—",
+    total: "—",
+    featured: false,
+    highlights: [
+      "Modelo enxuto pensado para cidades de até 50 mil habitantes",
+      "Formato compacto e econômico",
+      "Sem necessidade de mão de obra especializada",
     ],
   },
   {
@@ -34,7 +60,7 @@ const models = [
     name: "Express Delivery",
     icon: Store,
     subtitle: "Delivery + Retirada + Salão até 29 lugares + Rodízio Inteligente",
-    investment: "R$ 269 mil",
+    investment: "R$ 369 mil",
     area: "Acima de 70 m²",
     salao: true,
     rodizio: true,
@@ -44,39 +70,15 @@ const models = [
     lucratividade: "—",
     payback: "24 a 36 meses",
     extras: "R$ 20k (estoque) + R$ 50k (capital de giro)",
-    total: "R$ 339k",
+    total: "R$ 439k",
     featured: false,
     highlights: [
       "Área: acima de 70 m²",
       "Salão para até 29 lugares + delivery e retirada",
       "Inclui Rodízio Inteligente — serviço exclusivo Pizza Prime",
+      "Para quem busca mais presença de marca e atendimento local",
       "Payback estimado: 24 a 36 meses",
       "Ideal para cidades médias e grandes",
-    ],
-  },
-  {
-    id: "salao",
-    name: "Salão Delivery",
-    icon: ChefHat,
-    subtitle: "Salão amplo + Delivery + Rodízio + À la carte",
-    investment: "R$ 349 mil",
-    area: "Acima de 120 m²",
-    salao: true,
-    rodizio: true,
-    alacarte: true,
-    delivery: true,
-    retirada: true,
-    lucratividade: "—",
-    payback: "24 a 36 meses",
-    extras: "R$ 20k (estoque) + R$ 50k (capital de giro)",
-    total: "R$ 419k",
-    featured: false,
-    highlights: [
-      "Área: acima de 120 m²",
-      "Salão acima de 30 lugares + delivery e retirada",
-      "Maior capacidade: rodízio e à la carte",
-      "Payback estimado: 24 a 36 meses",
-      "Experiência completa, versatilidade para o franqueado",
     ],
   },
 ];
@@ -149,7 +151,7 @@ const FranchiseModels = () => {
                         <div className="flex flex-col items-center gap-1">
                           {m.featured && (
                             <Badge className="bg-secondary text-secondary-foreground text-[10px] px-2 py-0.5 mb-1">
-                              ⭐ Mais vendido
+                              ⭐ Recomendado
                             </Badge>
                           )}
                           <m.icon className="w-6 h-6 text-secondary" />
@@ -226,7 +228,7 @@ const FranchiseModels = () => {
             viewport={{ once: true }}
             className="md:hidden mb-12"
           >
-            <Tabs defaultValue="smart" className="w-full">
+            <Tabs defaultValue="delivery" className="w-full">
               <TabsList className="w-full bg-white/[0.06] border border-white/10 h-auto p-1 flex">
                 {models.map((m) => (
                   <TabsTrigger
@@ -236,7 +238,7 @@ const FranchiseModels = () => {
                   >
                     {m.featured && (
                       <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                        ⭐ Mais vendido
+                        ⭐ Recomendado
                       </span>
                     )}
                     {m.name}

@@ -12,7 +12,7 @@ const timelineData = [
 { year: "2022", text: "Entendendo o novo normal.", units: "53 lojas" },
 { year: "2023", text: "Estabelecimento de parcerias estratégicas.", units: "60 lojas" },
 { year: "2024", text: "Integração e conexão. Selo ABF Excelência em Franchising.", units: "73 lojas" },
-{ year: "2026", text: "Expansão nacional com foco no Smart Delivery.", units: "150+ unidades" }];
+{ year: "2026", text: "Expansão nacional com foco no modelo Delivery.", units: "150+ unidades" }];
 
 
 const FounderSection = () => {

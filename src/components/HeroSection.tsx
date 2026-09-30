@@ -51,7 +51,7 @@ marca reconhecida nacionalmente.
           </motion.p>
 
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-secondary font-bold text-2xl mb-6">
-            Investimento a partir de R$ 199 mil.
+            Modelo Delivery: investimento a partir de R$ 249 mil.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.7 }}>
