@@ -29,6 +29,9 @@ const MultiStepFranchiseForm = () => {
     utm_campaign: "",
     utm_content: "",
     utm_term: "",
+    // Id da campanha ({{campaign.id}} no Meta, {campaignid} no Google): chave
+    // estavel do cruzamento, nao muda quando a campanha e renomeada.
+    utm_id: "",
     data_conversao: "",
     identificador: "formulario-lp-franquia",
     // Identificadores de atribuição: permitem reconciliar o lead da planilha
@@ -53,6 +56,7 @@ const MultiStepFranchiseForm = () => {
       utm_campaign: params.get("utm_campaign") || "",
       utm_content: params.get("utm_content") || "",
       utm_term: params.get("utm_term") || "",
+      utm_id: params.get("utm_id") || "",
       fbclid: params.get("fbclid") || "",
       gclid: params.get("gclid") || "",
       fbc: getFbc(),
