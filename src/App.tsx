@@ -7,12 +7,13 @@ import { useEffect } from "react";
 import { carregarGeo } from "@/lib/tracking";
 import Index from "./pages/Index";
 import Obrigado from "./pages/Obrigado";
+import Privacidade from "./pages/Privacidade";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Geo por IP em cache: alimenta cidade/estado/pais dos proximos eventos.
+  // Geo (headers da Vercel via /api/geo) em cache: alimenta cidade/estado/pais dos proximos eventos.
   // O bootstrap no index.html le esse cache antes do GTM subir.
   useEffect(() => {
     carregarGeo();
@@ -27,6 +28,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/obrigado" element={<Obrigado />} />
+          <Route path="/privacidade" element={<Privacidade />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

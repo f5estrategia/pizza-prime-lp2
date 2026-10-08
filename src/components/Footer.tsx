@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo-pizza-prime.png";
 import { Phone, Mail, MapPin } from "lucide-react";
 
@@ -17,12 +18,18 @@ const Footer = () => (
             <Mail className="w-4 h-4" /> expansao@pizzaprime.com.br
           </a>
           <span className="flex items-center gap-2">
-            <MapPin className="w-4 h-4" /> Av. Conceição, 2940 - Cidade Nova II, Indaiatuba - SP
+            <MapPin className="w-4 h-4" /> Av. Conceição, 2940 - Cidade Nova II, Indaiatuba - SP, CEP 13334-345
           </span>
         </div>
       </div>
-      <div className="text-center text-xs text-white/50 mt-8">
-        Pizza Prime Franchising © 2026 Todos os direitos reservados.
+      <div className="text-center text-xs text-white/50 mt-8 space-y-2">
+        <p>PIZZA PRIME FRANCHISING LTDA · CNPJ 31.906.844/0001-20</p>
+        <p>
+          © 2026 Pizza Prime Franchising. Todos os direitos reservados. ·{" "}
+          <Link to="/privacidade" className="underline hover:text-white/80">
+            Política de Privacidade
+          </Link>
+        </p>
       </div>
     </div>
   </footer>
