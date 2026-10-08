@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import logo from "@/assets/logo-pizza-prime.png";
+import logo from "@/assets/logo-pizza-prime.webp";
 import MultiStepFranchiseForm from "./MultiStepFranchiseForm";
 
 const CTAFormSection = () => {

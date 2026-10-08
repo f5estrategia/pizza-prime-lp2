@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Instagram } from "lucide-react";
-import logoPizzaPrime from "@/assets/logo-pizza-prime.png";
+import logoPizzaPrime from "@/assets/logo-pizza-prime.webp";
 
 const INSTAGRAM_URL = "https://www.instagram.com/pizza.prime.franquia";
 

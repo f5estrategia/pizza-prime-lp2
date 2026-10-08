@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { CheckCircle, Clock, ShieldCheck } from "lucide-react";
-import img81 from "@/assets/pizza-prime-81.jpg";
-import img86 from "@/assets/pizza-prime-fotos-86.jpg";
+import img81 from "@/assets/pizza-prime-81.webp";
+import img86 from "@/assets/pizza-prime-fotos-86.webp";
 import pizzaTableBg from "@/assets/pizza-table-overhead.jpg";
 import WhatsAppButton from "./WhatsAppButton";
 

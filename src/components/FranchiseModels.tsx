@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { MapPin, Truck, Store, Bike, Check, X as XIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import mogiPhoto from "@/assets/mogi-das-cruzes.jpg";
+import mogiPhoto from "@/assets/mogi-das-cruzes.webp";
 
 // Modelos e valores conforme material oficial do cliente: foco comercial no Delivery,
 // Smart restrito a cidades de ate 50 mil habitantes, Express a partir de R$ 369 mil.

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import logo from "@/assets/logo-pizza-prime.png";
-import heroBg from "@/assets/pizza-prime-300.png";
+import logo from "@/assets/logo-pizza-prime.webp";
+import heroBg from "@/assets/pizza-prime-300.webp";
 import WhatsAppButton from "./WhatsAppButton";
 
 const stats = [
@@ -16,7 +16,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-brand-dark">
+    <section className="relative min-h-[min(100vh,56rem)] flex items-center overflow-hidden bg-brand-dark">
       <div className="absolute inset-0">
         <img src={heroBg} alt="Pizza Prime" className="w-full h-full object-cover object-[70%_center] md:object-center" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0E0E0E]/80 via-[#0E0E0E]/60 to-[#0E0E0E]/30" />

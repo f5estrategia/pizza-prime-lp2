@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import seloAbf from "@/assets/selo-abf-2024-2026.png";
-import seloExame from "@/assets/selo-exame.png";
-import seloTop25 from "@/assets/selo-top25.png";
-import seloPegn2025 from "@/assets/selo-pegn.png";
-import seloPegn2026 from "@/assets/selo-pegn-2026.png";
+import seloAbf from "@/assets/selo-abf-2024-2026.webp";
+import seloExame from "@/assets/selo-exame.webp";
+import seloTop25 from "@/assets/selo-top25.webp";
+import seloPegn2025 from "@/assets/selo-pegn.webp";
+import seloPegn2026 from "@/assets/selo-pegn-2026.webp";
 
 const badges = [
 { images: [{ src: seloAbf, alt: "Selos ABF de Excelência em Franchising de 2024, 2025 e 2026" }], text: "ABF Excelência em Franchising · 2024, 2025 e 2026" },

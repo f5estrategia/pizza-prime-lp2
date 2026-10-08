@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Newspaper, ChevronLeft, ChevronRight } from "lucide-react";
-import mediaForbes from "@/assets/media-forbes.png";
-import mediaPegn from "@/assets/media-pegn.png";
-import mediaExame from "@/assets/media-exame.png";
-import logoIfood from "@/assets/logo-ifood.png";
-import logo99food from "@/assets/logo-99food.png";
-import logoAmbev from "@/assets/logo-ambev.png";
-import logoBrf from "@/assets/logo-brf.png";
+import mediaForbes from "@/assets/media-forbes.webp";
+import mediaPegn from "@/assets/media-pegn.webp";
+import mediaExame from "@/assets/media-exame.webp";
+import logoIfood from "@/assets/logo-ifood.webp";
+import logo99food from "@/assets/logo-99food.webp";
+import logoAmbev from "@/assets/logo-ambev.webp";
+import logoBrf from "@/assets/logo-brf.webp";
 import logoLeprino from "@/assets/logo-leprino.svg";
 import logoZedelivery from "@/assets/logo-zedelivery.svg";
-import logoStone from "@/assets/logo-stone.png";
-import logoAzul from "@/assets/logo-azul.png";
+import logoStone from "@/assets/logo-stone.webp";
+import logoAzul from "@/assets/logo-azul.webp";
 
 const partners = [
 { name: "iFood", logo: logoIfood, desc: "Presença entre os top 3 maiores faturamentos da categoria pizzarias na plataforma, ampliando visibilidade e demanda recorrente." },

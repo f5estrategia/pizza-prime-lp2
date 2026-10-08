@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
-import seloAbf from "@/assets/selo-abf.png";
+import seloAbf from "@/assets/selo-abf.webp";
 import WhatsAppButton from "./WhatsAppButton";
 import pizzaTableBg from "@/assets/pizza-table-overhead.jpg";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "./ui/carousel";

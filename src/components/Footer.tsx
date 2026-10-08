@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo-pizza-prime.png";
+import logo from "@/assets/logo-pizza-prime.webp";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const Footer = () => (

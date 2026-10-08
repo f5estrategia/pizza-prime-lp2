@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { MapPin, GraduationCap, BarChart3, Megaphone, Utensils, HeadphonesIcon, ShieldCheck, Briefcase, Leaf, Building2, ShoppingCart, Lightbulb, Package, Bike } from "lucide-react";
 import WhatsAppButton from "./WhatsAppButton";
-import saltoPhoto from "@/assets/salto.jpg";
+import saltoPhoto from "@/assets/salto.webp";
 
 const supportSteps = [
 { icon: MapPin, title: "Avaliação e aprovação estratégica do ponto", text: "Estudos avançados de geomarketing e inteligência de mercado para identificar regiões com maior potencial de demanda, fluxo e rentabilidade." },

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import founderImg from "@/assets/founder-gabriel.jpg";
+import founderImg from "@/assets/founder-gabriel.webp";
 import WhatsAppButton from "./WhatsAppButton";
 
 const timelineData = [
