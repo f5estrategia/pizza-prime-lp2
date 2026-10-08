@@ -8,7 +8,7 @@ import WhatsAppButton from "./WhatsAppButton";
 
 const highlights = [
   { icon: CheckCircle, title: "+100 unidades", text: "Sistema testado e validado em operação real" },
-  { icon: Clock, title: "15 anos de mercado", text: "Duas décadas de experiência e evolução contínua" },
+  { icon: Clock, title: "15 anos de marca", text: "Desde 2011, com origem em uma pizzaria de bairro de 2001" },
   { icon: ShieldCheck, title: "30 unidades próprias", text: "Processos qualificados continuamente pela rede própria" },
 ];
 

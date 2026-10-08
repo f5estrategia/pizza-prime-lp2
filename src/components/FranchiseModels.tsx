@@ -25,7 +25,7 @@ const models = [
     total: "R$ 299k",
     featured: true,
     highlights: [
-      "Para quem quer começar com operação enxuta e alta rentabilidade",
+      "Para quem quer começar com uma operação enxuta",
       "Modelo de até 60 m², foco total em delivery e retirada",
       "Faturamento médio mensal de R$ 250 mil",
       "Lucratividade de 12% a 16%",
@@ -288,6 +288,15 @@ const FranchiseModels = () => {
               ))}
             </Tabs>
           </motion.div>
+
+          {/* Aviso exigido pela política do Google Ads (Declarações não confiáveis):
+              número financeiro sem ressalva é lido como promessa de retorno. */}
+          <p className="max-w-3xl mx-auto text-center text-xs text-white/50 leading-relaxed">
+            Faturamento, lucratividade e payback são estimativas baseadas na média das unidades da rede e não
+            constituem garantia de resultado. O desempenho de cada unidade varia conforme praça, ponto, gestão e
+            condições de mercado. Valores de investimento sujeitos a alteração; as condições completas constam da
+            Circular de Oferta de Franquia (COF).
+          </p>
         </div>
       </section>
 

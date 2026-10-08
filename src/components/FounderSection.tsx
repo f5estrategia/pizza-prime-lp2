@@ -12,7 +12,7 @@ const timelineData = [
 { year: "2022", text: "Entendendo o novo normal.", units: "53 lojas" },
 { year: "2023", text: "Estabelecimento de parcerias estratégicas.", units: "60 lojas" },
 { year: "2024", text: "Integração e conexão. Selo ABF Excelência em Franchising.", units: "73 lojas" },
-{ year: "2026", text: "Expansão nacional com foco no modelo Delivery.", units: "150+ unidades" }];
+{ year: "2026", text: "Expansão nacional com foco no modelo Delivery.", units: "+100 unidades" }];
 
 
 const FounderSection = () => {
@@ -25,7 +25,7 @@ const FounderSection = () => {
       <div className="container mx-auto px-4">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
           <p className="text-secondary font-bold uppercase tracking-widest text-sm mb-2">A origem da Pizza Prime</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-white">De uma pizzaria de bairro para a<br />maior rede brasileira de pizzarias.</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-white">De uma pizzaria de bairro para uma das<br />maiores redes de pizzarias do Brasil.</h2>
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-12 items-start mb-16">

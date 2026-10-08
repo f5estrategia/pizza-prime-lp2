@@ -34,9 +34,9 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-4xl md:text-5xl font-extrabold leading-tight mb-6 text-white lg:text-6xl">
 
-            Invista na{" "}
-            <span className="text-gradient-gold bg-secondary">maior rede brasileira</span>{" "}
-            de pizzarias e tenha um negócio pronto para o sucesso.
+            Invista em uma das{" "}
+            <span className="text-gradient-gold bg-secondary">maiores redes brasileiras</span>{" "}
+            de pizzarias, com um modelo de negócio já estruturado.
           </motion.h1>
 
           <motion.p
