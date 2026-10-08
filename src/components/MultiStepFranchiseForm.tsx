@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { salvarLead, buildUserData, getFbc, getFbp, getExternalId } from "@/lib/tracking";
+import { Link } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { API_BASE, dadosDoLead, buildUserData, getFbc, getFbp, getExternalId } from "@/lib/tracking";
 
 // Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio.
 // O Meta Pixel é disparado exclusivamente pelo GTM (GTM-PCL98LNF), não direto aqui.
@@ -11,9 +12,10 @@ declare global {
 }
 
 const MultiStepFranchiseForm = () => {
-  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -74,52 +76,69 @@ const MultiStepFranchiseForm = () => {
   const executeSubmission = async () => {
     if (isSubmitting) return; // Evita os 3 disparos do Lovable
     setIsSubmitting(true);
+    setErroEnvio(false);
 
-    // Google Apps Script (Web App) — grava direto na planilha de leads.
-    const SHEET_ENDPOINT =
-      "https://script.google.com/macros/s/AKfycbwW2C1Ue0bp9-ok-kVmN3fGCstoFIZoynt31AKAxjjLKQ8yC9FJRTVBpTpO3pqTydj7/exec";
-
+    // 1. Grava o lead na planilha pela função /api/lead do próprio domínio,
+    //    que repassa ao Apps Script (ver api/lead.ts). Dado pessoal não sai
+    //    mais do navegador direto para script.google.com.
+    let ok = false;
     try {
-      // 1. Grava o lead na planilha (Apps Script).
-      //    Content-Type "text/plain" evita o preflight CORS que o Apps Script
-      //    não responde; o script lê o corpo via e.postData.contents.
-      //    keepalive garante a entrega mesmo durante a navegação seguinte.
-      await fetch(SHEET_ENDPOINT, {
+      const r = await fetch(API_BASE + "/api/lead", {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        keepalive: true,
-      }).catch((err) => console.error("Erro ao gravar na planilha:", err));
-
-      // 2. Persiste o lead normalizado para enriquecer os eventos seguintes
-      //    (o Lead em /obrigado e os PageViews das proximas visitas).
-      salvarLead({
-        nome: formData.nome,
-        email: formData.email,
-        telefone: formData.telefone,
-        cidade: formData.cidade,
       });
-
-      // 3. Google Tag Manager — fonte única do rastreio.
-      //    O evento "form_submit" aciona no GTM as tags do Meta Pixel
-      //    (Complete Registration / Cadastro e Form_submit) e demais conversões.
-      //    O Lead do Pixel é disparado pelo GTM na página /obrigado
-      //    (evento "conversion_obrigado"), evitando contagem dupla.
-      //    O user_data vai junto para a Correspondência Avançada do Pixel.
-      if (typeof window !== "undefined" && window.dataLayer) {
-        window.dataLayer.push({
-          event: "form_submit",
-          ...formData,
-          user_data: buildUserData(),
-        });
-      }
+      ok = r.ok;
     } catch (err) {
-      console.warn("Erro no tracking, seguindo com o redirecionamento.", err);
+      console.error("Erro ao enviar o lead:", err);
     }
 
-    // Redireciona para a página de obrigado (URL única de conversão).
-    navigate("/obrigado");
+    if (!ok) {
+      setIsSubmitting(false);
+      setErroEnvio(true);
+      return;
+    }
+
+    // 2. Google Tag Manager — fonte única do rastreio. Os dois eventos saem no
+    //    envio, sem trocar de página (a pessoa continua na LP):
+    //    - "form_submit": tags do Meta Pixel (Complete Registration) e afins;
+    //    - "conversion_obrigado": o mesmo evento que a antiga página /obrigado
+    //      disparava (Google Ads, GA4, Lead do Pixel). Nome mantido para os
+    //      acionadores do GTM continuarem valendo.
+    //    O user_data (Correspondência Avançada) vai só em memória, no evento.
+    try {
+      const user_data = buildUserData(
+        dadosDoLead({
+          nome: formData.nome,
+          email: formData.email,
+          telefone: formData.telefone,
+          cidade: formData.cidade,
+        }),
+      );
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: "form_submit", ...formData, user_data });
+      window.dataLayer.push({ event: "conversion_obrigado", page: "/obrigado", user_data });
+    } catch (err) {
+      console.warn("Erro no tracking.", err);
+    }
+
+    setEnviado(true);
   };
+
+  if (enviado) {
+    return (
+      <div
+        role="status"
+        className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-xl text-black border border-gray-100 font-sans text-center"
+      >
+        <CheckCircle2 className="w-14 h-14 text-green-600 mx-auto mb-4" />
+        <h2 className="text-2xl font-extrabold mb-2">Cadastro enviado!</h2>
+        <p className="text-gray-700">
+          Recebemos seus dados. Em breve o time de expansão da Pizza Prime entrará em contato.
+        </p>
+      </div>
+    );
+  }
 
   const handleNextStep = () => {
     if (!formData.nome || !formData.email || !formData.telefone || !formData.objetivo) {
@@ -265,6 +284,19 @@ const MultiStepFranchiseForm = () => {
             </button>
           </div>
         )}
+
+        {erroEnvio && (
+          <p role="alert" className="mt-4 text-sm text-red-700 text-center">
+            Não foi possível enviar agora. Tente de novo em instantes ou escreva para{" "}
+            <a href="mailto:expansao@pizzaprime.com.br" className="underline">expansao@pizzaprime.com.br</a>.
+          </p>
+        )}
+
+        <p className="mt-4 text-[11px] leading-snug text-gray-500 text-center">
+          Ao enviar, você concorda que a Pizza Prime Franchising use seus dados para entrar em contato
+          sobre a franquia, conforme a{" "}
+          <Link to="/privacidade" className="underline hover:text-gray-700">Política de Privacidade</Link>.
+        </p>
       </form>
     </div>
   );

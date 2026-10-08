@@ -5,14 +5,24 @@
 // dataLayer para que as tags do GTM leiam. Sem mapear estas variáveis no GTM,
 // nada disso chega na Meta.
 //
-// O bootstrap (external_id, fbc, fbp, cache de geo e do lead) roda inline no
-// index.html ANTES do snippet do GTM, senão o PageView sai sem os parâmetros.
+// O bootstrap (external_id, fbc, fbp, cache de geo) roda inline no index.html
+// ANTES do snippet do GTM, senão o PageView sai sem os parâmetros.
 // Aqui ficam só as partes que dependem do React ou de rede.
+//
+// E-mail/telefone/nome do lead NAO ficam guardados no navegador: vão só no
+// evento do envio, em memória. Guardar dado pessoal no localStorage e consultar
+// IP em serviço de terceiro (ipwho.is) levaram à reprovação "site comprometido"
+// no Google Ads em 10/2026.
 
 const COOKIE_EXTERNAL_ID = "_f5eid";
 const STORAGE_GEO = "pp_geo";
-const STORAGE_LEAD = "pp_lead_ud";
 const STORAGE_FBC = "pp_fbc";
+
+/**
+ * Origem das funções /api. Na Vercel é o próprio domínio; a cópia do GitHub
+ * Pages não tem servidor e usa as funções da Vercel via CORS.
+ */
+export const API_BASE = import.meta.env.BASE_URL === "/" ? "" : "https://lp.pizzaprime.com.br";
 
 const UM_DIA = 86_400_000;
 
@@ -90,12 +100,10 @@ export const getFbp = (): string => lerCookie("_fbp");
 /** Monta o user_data com tudo que existe no momento da chamada. */
 export const buildUserData = (extra: Partial<UserData> = {}): UserData => {
   const { ts: _ts, ...geo } = lerJson<{ ts?: number } & Partial<UserData>>(STORAGE_GEO) || {};
-  const lead = lerJson<Partial<UserData>>(STORAGE_LEAD) || {};
 
   const ud: UserData = {
     external_id: getExternalId(),
     ...geo,
-    ...lead,
     ...extra,
   };
 
@@ -114,40 +122,41 @@ export const buildUserData = (extra: Partial<UserData> = {}): UserData => {
 
 // ------------------------------------------------------------------ escrita
 
-/** Persiste os dados do lead para enriquecer PageViews futuros do mesmo usuario. */
-export const salvarLead = (dados: {
+/** Dados do lead normalizados para o user_data do evento de envio (só em memória). */
+export const dadosDoLead = (dados: {
   nome?: string;
   email?: string;
   telefone?: string;
   cidade?: string;
-}) => {
+}): Partial<UserData> => {
   const lead: Partial<UserData> = {};
   if (dados.email) lead.em = normalizarEmail(dados.email);
   if (dados.telefone) lead.ph = normalizarTelefone(dados.telefone);
   if (dados.nome) lead.fn = normalizarPrimeiroNome(dados.nome);
   if (dados.cidade) lead.ct = normalizarTexto(dados.cidade);
-  if (Object.keys(lead).length) gravarJson(STORAGE_LEAD, lead);
+  return lead;
 };
 
 /**
- * Geolocaliza por IP e guarda em cache (24h) para o proximo carregamento.
- * O PageView atual nao aproveita (a chamada e assincrona e o GTM ja disparou),
- * mas a partir da segunda pagina cidade/estado/pais passam a ir junto.
+ * Geolocaliza pelo /api/geo (headers da Vercel) e guarda em cache (24h) para o
+ * proximo carregamento. O PageView atual nao aproveita (a chamada e assincrona
+ * e o GTM ja disparou), mas a partir da segunda pagina cidade/estado/pais vão junto.
  */
 export const carregarGeo = async (): Promise<void> => {
   const cache = lerJson<{ ts: number } & Partial<UserData>>(STORAGE_GEO);
   if (cache && Date.now() - (cache.ts || 0) < UM_DIA) return;
 
   try {
-    const r = await fetch("https://ipwho.is/");
+    const r = await fetch(API_BASE + "/api/geo");
+    if (!r.ok) return;
     const j = await r.json();
-    if (!j || j.success === false) return;
+    if (!j || !j.country) return;
 
     gravarJson(STORAGE_GEO, {
       ts: Date.now(),
       ct: normalizarTexto(j.city || ""),
-      st: normalizarTexto(j.region_code || j.region || ""),
-      country: (j.country_code || "").toLowerCase(),
+      st: normalizarTexto(j.region || ""),
+      country: (j.country || "").toLowerCase(),
     });
   } catch {
     /* falha de rede/adblock: segue sem geo */

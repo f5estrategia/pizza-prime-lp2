@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%apple-touch-icon.png" />
     <meta name="theme-color" content="#9B1B23" />
 
-    <meta name="description" content="Invista na maior rede brasileira de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
+    <meta name="description" content="Invista em uma das maiores redes brasileiras de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
     <meta name="author" content="Pizza Prime Franchising" />
 
     <meta property="og:type" content="website" />
@@ -27,7 +27,7 @@
       Correspondencia avancada do Meta Pixel.
       PRECISA rodar antes do snippet do GTM: o PageView dispara junto com o
       gtm.js e so enxerga o que ja estiver na dataLayer. Empurra external_id,
-      fbc, fbp e o cache de geo/lead. Mapear em GTM -> Variavel de camada de
+      fbc, fbp e o cache de geo. Mapear em GTM -> Variavel de camada de
       dados "user_data" -> campos de Correspondencia Avancada do Pixel.
     -->
     <script>
@@ -67,8 +67,9 @@
         try {
           var geo = JSON.parse(localStorage.getItem("pp_geo") || "null");
           if (geo) { if (geo.ct) ud.ct = geo.ct; if (geo.st) ud.st = geo.st; if (geo.country) ud.country = geo.country; }
-          var lead = JSON.parse(localStorage.getItem("pp_lead_ud") || "null");
-          if (lead) { if (lead.em) ud.em = lead.em; if (lead.ph) ud.ph = lead.ph; if (lead.fn) ud.fn = lead.fn; }
+          // Dado pessoal do lead nao fica mais no navegador: apaga o que versoes
+          // antigas da pagina gravaram.
+          localStorage.removeItem("pp_lead_ud");
         } catch (e) {}
 
         window.dataLayer = window.dataLayer || [];
@@ -87,8 +88,8 @@
     <!-- End Google Tag Manager -->
     <meta property="og:title" content="Pizza Prime Franchising — Seja um Franqueado">
   <meta name="twitter:title" content="Pizza Prime Franchising — Seja um Franqueado">
-  <meta property="og:description" content="Invista na maior rede brasileira de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
-  <meta name="twitter:description" content="Invista na maior rede brasileira de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
+  <meta property="og:description" content="Invista em uma das maiores redes brasileiras de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
+  <meta name="twitter:description" content="Invista em uma das maiores redes brasileiras de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
 </head>
 
   <body>
