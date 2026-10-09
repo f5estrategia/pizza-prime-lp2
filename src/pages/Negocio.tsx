@@ -225,7 +225,7 @@ const Negocio = () => {
     };
   }, []);
 
-  const maiorRede = FONTE_MAIOR_REDE ? "A maior rede brasileira de pizzarias¹" : "Uma das maiores redes de pizzarias do Brasil";
+  const maiorRede = FONTE_MAIOR_REDE ? "A maior rede brasileira de pizzarias¹" : "A maior rede brasileira de pizzarias";
 
   return (
     <main className="bg-[#0E0E0E] text-white pb-20 md:pb-0">
