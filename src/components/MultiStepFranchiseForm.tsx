@@ -1,129 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
-import { API_BASE, dadosDoLead, buildUserData, getFbc, getFbp, getExternalId } from "@/lib/tracking";
-
-// Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio.
-// O Meta Pixel é disparado exclusivamente pelo GTM (GTM-PCL98LNF), não direto aqui.
-declare global {
-  interface Window {
-    dataLayer: any[];
-  }
-}
+import { useLeadSubmission } from "@/hooks/useLeadSubmission";
 
 const MultiStepFranchiseForm = () => {
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [enviado, setEnviado] = useState(false);
-  const [erroEnvio, setErroEnvio] = useState(false);
-
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    telefone: "",
-    objetivo: "",
-    cidade: "",
-    capital: "",
-    prazo: "",
-    // Campos Hidden
-    utm_source: "",
-    utm_medium: "",
-    utm_campaign: "",
-    utm_content: "",
-    utm_term: "",
-    // Id da campanha ({{campaign.id}} no Meta, {campaignid} no Google): chave
-    // estavel do cruzamento, nao muda quando a campanha e renomeada.
-    utm_id: "",
-    data_conversao: "",
-    identificador: "formulario-lp-franquia",
-    // Identificadores de atribuição: permitem reconciliar o lead da planilha
-    // com o clique no Meta/Google (upload de conversão offline e CAPI).
-    fbclid: "",
-    gclid: "",
-    fbc: "",
-    fbp: "",
-    external_id: "",
-  });
-
-  // Captura UTMs da URL e define a Data da Conversão
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const dataAtual = new Date().toLocaleDateString("pt-BR");
-
-    setFormData((prev) => ({
-      ...prev,
-      data_conversao: dataAtual,
-      utm_source: params.get("utm_source") || "",
-      utm_medium: params.get("utm_medium") || "",
-      utm_campaign: params.get("utm_campaign") || "",
-      utm_content: params.get("utm_content") || "",
-      utm_term: params.get("utm_term") || "",
-      utm_id: params.get("utm_id") || "",
-      fbclid: params.get("fbclid") || "",
-      gclid: params.get("gclid") || "",
-      fbc: getFbc(),
-      fbp: getFbp(),
-      external_id: getExternalId(),
-    }));
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // ENVIO FINAL (PLANILHA + RASTREIO)
-  const executeSubmission = async () => {
-    if (isSubmitting) return; // Evita os 3 disparos do Lovable
-    setIsSubmitting(true);
-    setErroEnvio(false);
-
-    // 1. Grava o lead na planilha pela função /api/lead do próprio domínio,
-    //    que repassa ao Apps Script (ver api/lead.ts). Dado pessoal não sai
-    //    mais do navegador direto para script.google.com.
-    let ok = false;
-    try {
-      const r = await fetch(API_BASE + "/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      ok = r.ok;
-    } catch (err) {
-      console.error("Erro ao enviar o lead:", err);
-    }
-
-    if (!ok) {
-      setIsSubmitting(false);
-      setErroEnvio(true);
-      return;
-    }
-
-    // 2. Google Tag Manager — fonte única do rastreio. Os dois eventos saem no
-    //    envio, sem trocar de página (a pessoa continua na LP):
-    //    - "form_submit": tags do Meta Pixel (Complete Registration) e afins;
-    //    - "conversion_obrigado": o mesmo evento que a antiga página /obrigado
-    //      disparava (Google Ads, GA4, Lead do Pixel). Nome mantido para os
-    //      acionadores do GTM continuarem valendo.
-    //    O user_data (Correspondência Avançada) vai só em memória, no evento.
-    try {
-      const user_data = buildUserData(
-        dadosDoLead({
-          nome: formData.nome,
-          email: formData.email,
-          telefone: formData.telefone,
-          cidade: formData.cidade,
-        }),
-      );
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: "form_submit", ...formData, user_data });
-      window.dataLayer.push({ event: "conversion_obrigado", page: "/obrigado", user_data });
-    } catch (err) {
-      console.warn("Erro no tracking.", err);
-    }
-
-    setEnviado(true);
-  };
+  const { formData, handleInputChange, isSubmitting, enviado, erroEnvio, enviar: executeSubmission } =
+    useLeadSubmission({ identificador: "formulario-lp-franquia" });
 
   if (enviado) {
     return (
@@ -154,14 +37,21 @@ const MultiStepFranchiseForm = () => {
     }
   };
 
+  // Sem envio nativo de <form>: a medição automática de formulários do Google Tag
+  // gera um "form_submit" a cada submit nativo (mesmo nome do nosso evento) e
+  // disparava o CompleteRegistration da Meta antes do lead ser salvo e sem
+  // e-mail/telefone na correspondência avançada.
+  const handleSubmitStep2 = () => {
+    if (!formData.cidade || !formData.capital || !formData.prazo) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+    executeSubmission();
+  };
+
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-xl text-black border border-gray-100 font-sans">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          executeSubmission();
-        }}
-      >
+      <div>
         {/* Campos Hidden que o Make e o RD capturam */}
         <input type="hidden" name="utm_source" value={formData.utm_source} />
         <input type="hidden" name="utm_medium" value={formData.utm_medium} />
@@ -268,7 +158,8 @@ const MultiStepFranchiseForm = () => {
             </select>
 
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmitStep2}
               disabled={isSubmitting}
               className="w-full py-4 mt-4 bg-[#FF8C00] text-black font-extrabold rounded uppercase hover:bg-orange-600 transition-all active:scale-95 shadow-md disabled:bg-gray-400"
             >
@@ -297,7 +188,7 @@ const MultiStepFranchiseForm = () => {
           sobre a franquia, conforme a{" "}
           <Link to="/privacidade" className="underline hover:text-gray-700">Política de Privacidade</Link>.
         </p>
-      </form>
+      </div>
     </div>
   );
 };

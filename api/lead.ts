@@ -20,9 +20,20 @@ const CAMPOS = [
   "data_conversao", "identificador", "fbclid", "gclid", "fbc", "fbp", "external_id",
 ];
 
+// Aceita também o próprio domínio da requisição: as URLs de preview da Vercel
+// (*.vercel.app) postam no mesmo endereço e não estão na lista fixa.
+const origemPermitida = (req: Request, origem: string) => {
+  if (ORIGENS.includes(origem)) return true;
+  try {
+    return new URL(origem).host === new URL(req.url).host;
+  } catch {
+    return false;
+  }
+};
+
 const cors = (req: Request): Record<string, string> => {
   const origem = req.headers.get("origin") || "";
-  if (!ORIGENS.includes(origem)) return {};
+  if (!origemPermitida(req, origem)) return {};
   return {
     "Access-Control-Allow-Origin": origem,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -43,7 +54,7 @@ export function OPTIONS(req: Request) {
 
 export async function POST(req: Request) {
   const origem = req.headers.get("origin");
-  if (origem && !ORIGENS.includes(origem)) return json(req, 403, { ok: false });
+  if (origem && !origemPermitida(req, origem)) return json(req, 403, { ok: false });
 
   const texto = await req.text();
   if (texto.length > 10_000) return json(req, 413, { ok: false });
@@ -62,6 +73,10 @@ export async function POST(req: Request) {
   }
   if (!lead.nome || !lead.email || !lead.telefone) return json(req, 400, { ok: false });
 
+  // O RD corre em paralelo com a planilha, mas só a planilha decide a resposta:
+  // se o RD cair, o lead continua salvo e o formulário confirma o envio.
+  const rd = enviarParaRd(lead);
+
   try {
     // text/plain: o Apps Script le o corpo via e.postData.contents, como antes.
     const r = await fetch(SHEET_ENDPOINT, {
@@ -72,8 +87,69 @@ export async function POST(req: Request) {
     if (!r.ok) throw new Error("Apps Script respondeu " + r.status);
   } catch (err) {
     console.error("Falha ao gravar o lead na planilha:", err);
+    await rd;
     return json(req, 502, { ok: false });
   }
 
+  await rd;
   return json(req, 200, { ok: true });
+}
+
+// ------------------------------------------------------------- RD Station
+// Conversão direto no RD Station Marketing, já com a origem (traffic_*): é o
+// que evita o lead entrar como "Desconhecido". Só para as LPs listadas aqui,
+// para não duplicar o fluxo atual da LP principal. Sem RD_PUBLIC_TOKEN
+// (token público da conta, cadastrado na Vercel), não faz nada.
+
+const CONVERSOES_RD: Record<string, string> = {
+  "formulario-lp-negocio": "lp-negocio-pizza-prime",
+};
+
+const tag = (texto: string) =>
+  texto
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60);
+
+async function enviarParaRd(lead: Record<string, string>): Promise<void> {
+  const token = process.env.RD_PUBLIC_TOKEN;
+  const conversao = CONVERSOES_RD[lead.identificador];
+  if (!token || !conversao) return;
+
+  const tags = ["lp-negocio"];
+  if (lead.capital) tags.push("capital-" + tag(lead.capital));
+  if (lead.prazo) tags.push("prazo-" + tag(lead.prazo));
+
+  const payload: Record<string, unknown> = {
+    conversion_identifier: conversao,
+    name: lead.nome,
+    email: lead.email,
+    mobile_phone: lead.telefone,
+    city: lead.cidade || undefined,
+    tags,
+    traffic_source: lead.utm_source || "direto",
+    traffic_medium: lead.utm_medium || undefined,
+    traffic_campaign: lead.utm_campaign || undefined,
+    traffic_value: lead.utm_term || lead.utm_content || undefined,
+    available_for_mailing: true,
+    legal_bases: [{ category: "communications", type: "consent", status: "granted" }],
+  };
+
+  try {
+    const r = await fetch(
+      "https://api.rd.services/platform/conversions?api_key=" + encodeURIComponent(token),
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event_type: "CONVERSION", event_family: "CDP", payload }),
+        signal: AbortSignal.timeout(6000),
+      },
+    );
+    if (!r.ok) console.error("RD Station respondeu", r.status, (await r.text()).slice(0, 300));
+  } catch (err) {
+    console.error("Falha ao enviar o lead ao RD Station:", err);
+  }
 }

@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => ({
   // Vercel (dominio oficial lp.pizzaprime.com.br) serve na raiz; a Vercel define VERCEL=1 no build.
   // GitHub Pages publica como project page: https://f5estrategia.github.io/pizza-prime-lp2/
   base: process.env.VERCEL ? "/" : "/pizza-prime-lp2/",
+  // O postbuild lê o manifest para pôr modulepreload do bundle da Index no HTML
+  // da raiz (e apaga o manifest depois).
+  build: { manifest: true },
   server: {
     host: "::",
     port: 8080,

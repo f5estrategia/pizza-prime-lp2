@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Bebas Neue"', 'sans-serif'],
+        display: ['Anton', 'Impact', 'sans-serif'],
         body: ['"Open Sans"', 'sans-serif'],
       },
       colors: {

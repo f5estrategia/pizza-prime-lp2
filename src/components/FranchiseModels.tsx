@@ -37,7 +37,7 @@ const models = [
     name: "Smart Delivery",
     icon: Bike,
     subtitle: "Delivery + Retirada para cidades de até 50 mil habitantes",
-    investment: "R$ 199 mil",
+    investment: "R$ 199 mil*",
     area: "Compacto",
     salao: false,
     rodizio: false,
@@ -82,6 +82,9 @@ const models = [
     ],
   },
 ];
+
+// Pedido do Diego (09/10/2026): o Smart só vale para cidades pequenas.
+const NOTA_SMART = "*Smart Delivery: para cidades até 50 mil habitantes.";
 
 const comparisonRows: { label: string; key: string; boolean?: boolean }[] = [
   { label: "Investimento inicial", key: "investment" },
@@ -258,6 +261,7 @@ const FranchiseModels = () => {
                     </div>
 
                     <div className="text-3xl font-extrabold text-secondary mb-4">{m.investment}</div>
+                    {m.id === "smart" && <p className="text-xs text-white/60 -mt-3 mb-4">{NOTA_SMART}</p>}
 
                     <ul className="space-y-3 mb-6">
                       {m.highlights.map((h, j) => (
@@ -292,7 +296,7 @@ const FranchiseModels = () => {
           {/* Aviso exigido pela política do Google Ads (Declarações não confiáveis):
               número financeiro sem ressalva é lido como promessa de retorno. */}
           <p className="max-w-3xl mx-auto text-center text-xs text-white/50 leading-relaxed">
-            Faturamento, lucratividade e payback são estimativas baseadas na média das unidades da rede e não
+            {NOTA_SMART} Faturamento, lucratividade e payback são estimativas baseadas na média das unidades da rede e não
             constituem garantia de resultado. O desempenho de cada unidade varia conforme praça, ponto, gestão e
             condições de mercado. Valores de investimento sujeitos a alteração; as condições completas constam da
             Circular de Oferta de Franquia (COF).
