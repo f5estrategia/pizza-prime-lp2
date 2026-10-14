@@ -48,7 +48,7 @@ const BotaoPrincipal = ({ children, className = "" }: { children: ReactNode; cla
 
 const Titulo = ({ sobre, children, cor = "escuro" }: { sobre: string; children: ReactNode; cor?: "escuro" | "claro" }) => (
   <div className="mb-8 md:mb-10">
-    <p className={`text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-2 ${cor === "claro" ? "text-secondary" : "text-[#9b1b16]"}`}>{sobre}</p>
+    <p className={`text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-4 ${cor === "claro" ? "text-secondary" : "text-[#9b1b16]"}`}>{sobre}</p>
     <h2 className={`font-display uppercase text-4xl md:text-6xl leading-[1.05] ${cor === "claro" ? "text-white" : "text-[#9b1b16]"}`}>{children}</h2>
   </div>
 );
@@ -217,7 +217,7 @@ const Oportunidade = () => {
                 <p className="font-display uppercase text-white text-xl sm:text-2xl md:text-3xl tracking-wide">
                   A maior rede brasileira de pizzarias
                 </p>
-                <h1 className="font-display uppercase text-secondary text-[2.6rem] sm:text-6xl lg:text-[4.2rem] leading-[1.05] mt-3">
+                <h1 className="font-display uppercase text-secondary text-[2.6rem] sm:text-6xl lg:text-[4.2rem] leading-[1.15] sm:leading-[1.15] lg:leading-[1.15] mt-3">
                   Quanto uma pizzaria deixa na mesa todo mês?
                 </h1>
                 <p className="mt-4 text-white/85 text-base md:text-lg max-w-lg leading-relaxed">
@@ -274,7 +274,7 @@ const Oportunidade = () => {
           <dl className="grid sm:grid-cols-3 gap-3 md:gap-4">
             {MERCADO.map((m) => (
               <div key={m.titulo} className="rounded-2xl bg-white p-5 shadow-sm border border-[#9b1b16]/10">
-                <dd className="font-display text-4xl md:text-5xl text-[#9b1b16] leading-none">{m.titulo}</dd>
+                <dd className="font-display text-[2.4rem] md:text-[1.9rem] lg:text-[1.6rem] xl:text-[2.2rem] text-[#9b1b16] leading-none whitespace-nowrap">{m.titulo}</dd>
                 <dt className="text-sm text-[#444] mt-2 leading-snug">{m.texto}</dt>
                 <p className="text-[11px] text-[#888] mt-2">Fonte: {m.fonte}</p>
               </div>
@@ -364,7 +364,7 @@ const Oportunidade = () => {
       <section className="py-12 md:py-20 bg-[#f6a623]">
         <div className="container mx-auto px-5 max-w-6xl">
           <div className="mb-8 md:mb-10">
-            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-2 text-[#5a0f0a]">Números da rede</p>
+            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-4 text-[#5a0f0a]">Números da rede</p>
             <h2 className="font-display uppercase text-4xl md:text-6xl leading-[1.05] text-white">
               Você entra em uma rede com modelo testado e validado
             </h2>
