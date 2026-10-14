@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useEffect, type ComponentType, type ReactNode } from "react";
+import { createElement, lazy, Suspense, useEffect, type ComponentType, type ReactNode } from "react";
 import { carregarGeo } from "@/lib/tracking";
 
 // Cada LP em um bundle próprio: a /negocio não baixa os componentes da LP
@@ -11,6 +11,7 @@ import { carregarGeo } from "@/lib/tracking";
 // para tudo baixar em paralelo.
 const Index = lazy(() => import("./pages/Index"));
 const Negocio = lazy(() => import("./pages/Negocio"));
+const Oportunidade = lazy(() => import("./pages/Oportunidade"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Privacidade = lazy(() => import("./pages/Privacidade"));
 const Obrigado = lazy(() => import("./pages/Obrigado"));
@@ -19,11 +20,18 @@ const Obrigado = lazy(() => import("./pages/Obrigado"));
 // main.tsx carrega o módulo antes do primeiro render e hidrata: o React
 // reaproveita o HTML que já está na tela em vez de recriar os elementos (recriar
 // fazia o navegador medir o LCP de novo, depois do JavaScript e do GTM).
-let NegocioPronto: ComponentType | null = null;
-export const definirNegocio = (componente: ComponentType) => {
-  NegocioPronto = componente;
+const prontas: Record<string, ComponentType> = {};
+export const definirPagina = (rota: string, componente: ComponentType) => {
+  prontas[rota] = componente;
 };
-export const precarregarNegocio = () => import("./pages/Negocio").then((m) => definirNegocio(m.default));
+const carregadores: Record<string, () => Promise<{ default: ComponentType }>> = {
+  "/negocio": () => import("./pages/Negocio"),
+  "/oportunidade": () => import("./pages/Oportunidade"),
+};
+/** Rota pré-renderizada correspondente ao caminho atual, ou null. */
+export const rotaPreRenderizada = (caminho: string) =>
+  Object.keys(carregadores).find((r) => new RegExp(r + "\/?$").test(caminho)) || null;
+export const precarregarPagina = (rota: string) => carregadores[rota]().then((m) => definirPagina(rota, m.default));
 
 const queryClient = new QueryClient();
 
@@ -44,7 +52,8 @@ export const Rotas = () => (
       <Route path="/" element={<Index />} />
       <Route path="/obrigado" element={<Obrigado />} />
       <Route path="/privacidade" element={<Privacidade />} />
-      <Route path="/negocio" element={NegocioPronto ? <NegocioPronto /> : <Negocio />} />
+      <Route path="/negocio" element={prontas["/negocio"] ? createElement(prontas["/negocio"]) : <Negocio />} />
+      <Route path="/oportunidade" element={prontas["/oportunidade"] ? createElement(prontas["/oportunidade"]) : <Oportunidade />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

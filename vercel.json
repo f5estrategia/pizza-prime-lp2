@@ -5,6 +5,10 @@
       "destination": "/negocio/index.html"
     },
     {
+      "source": "/oportunidade",
+      "destination": "/oportunidade/index.html"
+    },
+    {
       "source": "/((?!assets/|api/).*)",
       "destination": "/index.html"
     }

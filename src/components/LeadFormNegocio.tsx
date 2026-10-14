@@ -57,12 +57,15 @@ const Chips = ({
 // gera um evento "form_submit" a cada submit nativo, com o mesmo nome do nosso
 // evento, e isso disparava o CompleteRegistration da Meta no "Continuar" (antes
 // do lead existir). Os botões são type="button" e o Enter é tratado à mão.
-const LeadFormNegocio = () => {
+const LeadFormNegocio = ({
+  identificador = "formulario-lp-negocio",
+  lp = "negocio",
+}: { identificador?: string; lp?: string } = {}) => {
   const [etapa, setEtapa] = useState<1 | 2>(1);
   const [erro, setErro] = useState("");
   const { formData, setCampo, isSubmitting, enviado, erroEnvio, enviar } = useLeadSubmission({
-    identificador: "formulario-lp-negocio",
-    lp: "negocio",
+    identificador,
+    lp,
     deduzirOrigem: true,
   });
 

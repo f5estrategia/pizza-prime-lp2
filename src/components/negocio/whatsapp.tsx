@@ -9,25 +9,27 @@ const MENSAGEM = "Olá! Vi a matéria com Fernando Miranda e quero conhecer a fr
 export const WHATSAPP_URL = `https://wa.me/${NUMERO}?text=${encodeURIComponent(MENSAGEM)}`;
 
 /** Evento do GTM para medir clique no WhatsApp (GA4 + Meta Contact, sem conversão do Google Ads). */
-export const registrarCliqueWhatsApp = (local: string) => {
+export const registrarCliqueWhatsApp = (local: string, lp = "negocio") => {
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: "whatsapp_click", lp: "negocio", local });
+  window.dataLayer.push({ event: "whatsapp_click", lp, local });
 };
 
 export const LinkWhatsApp = ({
   local,
   className,
   children,
+  lp = "negocio",
 }: {
   local: string;
   className?: string;
   children: ReactNode;
+  lp?: string;
 }) => (
   <a
     href={WHATSAPP_URL}
     target="_blank"
     rel="noopener noreferrer"
-    onClick={() => registrarCliqueWhatsApp(local)}
+    onClick={() => registrarCliqueWhatsApp(local, lp)}
     className={className}
   >
     {children}
@@ -35,7 +37,7 @@ export const LinkWhatsApp = ({
 );
 
 /** Botão flutuante com popup curto antes de abrir o WhatsApp (desktop; no celular a barra fixa cumpre esse papel). */
-export const WhatsAppFlutuante = () => {
+export const WhatsAppFlutuante = ({ lp = "negocio" }: { lp?: string } = {}) => {
   const [aberto, setAberto] = useState(false);
 
   return (
@@ -47,7 +49,7 @@ export const WhatsAppFlutuante = () => {
           </button>
           <p className="font-extrabold text-lg leading-tight mb-1">Fale com o time de expansão</p>
           <p className="text-sm text-gray-600 mb-4">Tire suas dúvidas sobre o modelo e o investimento direto no WhatsApp.</p>
-          <LinkWhatsApp local="popup" className="flex items-center justify-center gap-2 h-12 rounded-lg bg-whatsapp text-white font-bold hover:bg-whatsapp-hover transition-colors">
+          <LinkWhatsApp local="popup" lp={lp} className="flex items-center justify-center gap-2 h-12 rounded-lg bg-whatsapp text-white font-bold hover:bg-whatsapp-hover transition-colors">
             <img src={whatsappIcon} alt="" width={22} height={22} />
             Abrir WhatsApp
           </LinkWhatsApp>

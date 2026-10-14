@@ -103,6 +103,7 @@ export async function POST(req: Request) {
 
 const CONVERSOES_RD: Record<string, string> = {
   "formulario-lp-negocio": "lp-negocio-pizza-prime",
+  "formulario-lp-oportunidade": "lp-oportunidade-pizza-prime",
 };
 
 const tag = (texto: string) =>
@@ -119,7 +120,7 @@ async function enviarParaRd(lead: Record<string, string>): Promise<void> {
   const conversao = CONVERSOES_RD[lead.identificador];
   if (!token || !conversao) return;
 
-  const tags = ["lp-negocio"];
+  const tags = [conversao.replace("-pizza-prime", "")];
   if (lead.capital) tags.push("capital-" + tag(lead.capital));
   if (lead.prazo) tags.push("prazo-" + tag(lead.prazo));
 

@@ -39,14 +39,25 @@ copyFileSync("dist/index.html", "dist/404.html");
 // Impede o processamento Jekyll no GitHub Pages.
 writeFileSync("dist/.nojekyll", "");
 
-// LP /negocio: HTML proprio com title/description/og da pagina (o preview do
-// link no WhatsApp e no Instagram le so o HTML), ja pre-renderizado (o texto
-// aparece antes do JavaScript) e com 200 no GitHub Pages.
-const NEGOCIO = {
-  title: "Franquia Pizza Prime | Modelo, investimento e números da rede",
-  description:
-    "Modelo delivery testado em mais de 100 unidades: investimento de R$ 249 mil + R$ 50 mil de capital de giro, cozinha central e suporte do ponto à inauguração. Fale com o time de expansão.",
-};
+// LPs curtas (/negocio e /oportunidade): HTML proprio com title/description/og
+// da pagina (o preview do link no WhatsApp e no Instagram le so o HTML), ja
+// pre-renderizado (o texto aparece antes do JavaScript) e com 200 no GitHub Pages.
+const PAGINAS = [
+  {
+    rota: "/negocio",
+    modulo: "src/pages/Negocio.tsx",
+    title: "Franquia Pizza Prime | Modelo, investimento e números da rede",
+    description:
+      "Modelo delivery testado em mais de 100 unidades: investimento de R$ 249 mil + R$ 50 mil de capital de giro, cozinha central e suporte do ponto à inauguração. Fale com o time de expansão.",
+  },
+  {
+    rota: "/oportunidade",
+    modulo: "src/pages/Oportunidade.tsx",
+    title: "Franquia Pizza Prime | A força de uma rede na conta da sua pizzaria",
+    description:
+      "A maior rede brasileira de pizzarias: mais de 100 unidades, média de 3 lojas por franqueado e o modelo Delivery a partir de R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
+  },
+];
 
 const trocar = (html, regex, novo, nome) => {
   if (!regex.test(html)) throw new Error(`postbuild: não achei ${nome} no index.html`);
@@ -54,21 +65,22 @@ const trocar = (html, regex, novo, nome) => {
 };
 
 const { render } = await import(pathToFileURL("dist-ssr/negocio.js").href);
-const corpo = render();
-if (!corpo.includes("formulario")) throw new Error("postbuild: pré-renderização da /negocio veio sem o formulário");
-
-let html = comPreload(htmlOriginal, arquivosDe("src/pages/Negocio.tsx"));
-html = trocar(html, /<title>[^<]*<\/title>/, `<title>${NEGOCIO.title}</title>`, "<title>");
-html = trocar(html, /(<meta name="description" content=")[^"]*"/, `$1${NEGOCIO.description}"`, "description");
-html = trocar(html, /(<meta property="og:title" content=")[^"]*"/, `$1${NEGOCIO.title}"`, "og:title");
-html = trocar(html, /(<meta property="og:description" content=")[^"]*"/, `$1${NEGOCIO.description}"`, "og:description");
-html = trocar(html, /(<meta name="twitter:title" content=")[^"]*"/, `$1${NEGOCIO.title}"`, "twitter:title");
-html = trocar(html, /(<meta name="twitter:description" content=")[^"]*"/, `$1${NEGOCIO.description}"`, "twitter:description");
-html = trocar(html, /<div id="root"><\/div>/, `<div id="root">${corpo}</div>`, '<div id="root">');
-mkdirSync("dist/negocio", { recursive: true });
-writeFileSync("dist/negocio/index.html", html);
+for (const p of PAGINAS) {
+  const corpo = render(p.rota);
+  if (!corpo.includes("formulario")) throw new Error(`postbuild: pré-renderização de ${p.rota} veio sem o formulário`);
+  let html = comPreload(htmlOriginal, arquivosDe(p.modulo));
+  html = trocar(html, /<title>[^<]*<\/title>/, `<title>${p.title}</title>`, "<title>");
+  html = trocar(html, /(<meta name="description" content=")[^"]*"/, `$1${p.description}"`, "description");
+  html = trocar(html, /(<meta property="og:title" content=")[^"]*"/, `$1${p.title}"`, "og:title");
+  html = trocar(html, /(<meta property="og:description" content=")[^"]*"/, `$1${p.description}"`, "og:description");
+  html = trocar(html, /(<meta name="twitter:title" content=")[^"]*"/, `$1${p.title}"`, "twitter:title");
+  html = trocar(html, /(<meta name="twitter:description" content=")[^"]*"/, `$1${p.description}"`, "twitter:description");
+  html = trocar(html, /<div id="root"><\/div>/, `<div id="root">${corpo}</div>`, `<div id="root">`);
+  mkdirSync(`dist${p.rota}`, { recursive: true });
+  writeFileSync(`dist${p.rota}/index.html`, html);
+}
 
 rmSync("dist/.vite", { recursive: true, force: true });
 rmSync("dist-ssr", { recursive: true, force: true });
 
-console.log("postbuild: index.html, 404.html, .nojekyll e negocio/index.html (pré-renderizada) gerados");
+console.log("postbuild: index.html, 404.html, .nojekyll, negocio/ e oportunidade/ (pré-renderizadas) gerados");
