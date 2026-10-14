@@ -12,6 +12,8 @@ import logo from "@/assets/logo-pizza-prime.webp";
 import parceiros from "@/assets/negocio/parceiros-folheto.webp";
 import inauguracao from "@/assets/negocio/inauguracao-pouso-alegre.webp";
 import convencao from "@/assets/negocio/convencao-rede.webp";
+import pizzaMesa1920 from "@/assets/negocio/hero-pizza-mesa-1920.webp";
+import pizzaMesa960 from "@/assets/negocio/hero-pizza-mesa-960.webp";
 import capaJoao from "@/assets/negocio/video-joao.webp";
 import capaMariane from "@/assets/negocio/video-mariane.webp";
 import capaViniciusVanessa from "@/assets/negocio/video-vinicius-vanessa.webp";
@@ -128,38 +130,76 @@ const AVISO =
 
 // ------------------------------------------------------------------ cupom fiscal
 
+// Papel térmico: levemente amarelado, com granulação, luz quente vindo da
+// esquerda e a marca da dobra. Tinta um pouco falhada, como impressora de caixa.
+const PAPEL = "#f3eee3";
+const TINTA = "#3b3631";
+const GRAO =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .35 0 0 0 0 .3 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")";
+
 const BordaCupom = ({ lado }: { lado: "cima" | "baixo" }) => (
   <div
     aria-hidden="true"
-    className={`h-3 w-full ${lado === "cima" ? "-mb-px" : "-mt-px rotate-180"}`}
+    className={`h-2.5 w-full ${lado === "cima" ? "-mb-px" : "-mt-px rotate-180"}`}
     style={{
-      background: `linear-gradient(-45deg, #fff 6px, transparent 0) 0 0 / 12px 12px repeat-x, linear-gradient(45deg, #fff 6px, transparent 0) 0 0 / 12px 12px repeat-x`,
+      background: `linear-gradient(-45deg, ${PAPEL} 5px, transparent 0) 0 0 / 10px 10px repeat-x, linear-gradient(45deg, ${PAPEL} 5px, transparent 0) 0 0 / 10px 10px repeat-x`,
     }}
   />
 );
 
-const Cupom = () => (
-  <div className="relative max-w-sm w-full mx-auto lg:mx-0 rotate-[-2deg] drop-shadow-2xl">
+/** Cupom "deitado" na mesa: perspectiva, sombra de contato e sombra longa no sentido da luz. */
+const Cupom = ({ className = "", deitado = true }: { className?: string; deitado?: boolean }) => (
+  <div
+    className={`relative max-w-[340px] w-full mx-auto lg:mx-0 ${className}`}
+    style={{
+      transform: deitado ? "perspective(1100px) rotateX(28deg) rotateZ(-9deg) skewX(2deg)" : "rotate(-4deg)",
+      transformOrigin: "50% 80%",
+      filter:
+        "drop-shadow(0 1px 1px rgba(0,0,0,.55)) drop-shadow(14px 22px 14px rgba(10,4,2,.55)) drop-shadow(30px 50px 40px rgba(10,4,2,.45))",
+    }}
+  >
     <BordaCupom lado="cima" />
-    <div className="bg-white text-[#2b2b2b] px-6 py-5 font-mono text-[13px]">
-      <p className="text-center font-bold tracking-widest text-xs">PIZZARIA · CUPOM DO MÊS</p>
-      <div className="border-t border-dashed border-gray-400 my-3" />
-      {CUPOM.map((c) => (
-        <p key={c} className="flex justify-between py-0.5">
+    <div
+      className="relative px-6 pt-4 pb-5 font-mono text-[13px] overflow-hidden"
+      style={{ backgroundColor: PAPEL, color: TINTA, textShadow: `0 0 .6px ${TINTA}` }}
+    >
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ backgroundImage: GRAO }} />
+      <p className="text-center font-bold tracking-widest text-xs opacity-90">PIZZARIA · CUPOM DO MÊS</p>
+      <p className="text-center text-[10px] tracking-wider opacity-60 mt-0.5">CAIXA 01 · FECHAMENTO MENSAL</p>
+      <div className="border-t border-dashed border-current opacity-40 my-3" />
+      {CUPOM.map((c, i) => (
+        <p key={c} className="flex justify-between py-0.5" style={{ opacity: i % 2 ? 0.82 : 0.92 }}>
           <span>{c}</span>
           <span>R$ ??</span>
         </p>
       ))}
-      <div className="border-t border-dashed border-gray-400 my-3" />
+      <div className="border-t border-dashed border-current opacity-40 my-3" />
       <p className="flex justify-between font-bold text-sm">
         <span>SUA MARGEM</span>
         <span>R$ ??</span>
       </p>
-      <div className="mt-4 flex gap-[3px] h-8 items-end" aria-hidden="true">
+      <div className="mt-4 flex gap-[3px] h-8 items-end opacity-85" aria-hidden="true">
         {Array.from({ length: 34 }).map((_, i) => (
-          <span key={i} className="bg-[#2b2b2b] h-full" style={{ width: i % 3 === 0 ? 3 : i % 5 === 0 ? 1 : 2 }} />
+          <span key={i} className="h-full" style={{ backgroundColor: TINTA, width: i % 3 === 0 ? 3 : i % 5 === 0 ? 1 : 2 }} />
         ))}
       </div>
+      {/* luz quente da esquerda, sombra à direita, dobra do papel */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none mix-blend-multiply"
+        style={{
+          background:
+            "linear-gradient(100deg, rgba(255,214,150,.35) 0%, rgba(255,255,255,0) 35%, rgba(120,80,50,.10) 70%, rgba(70,40,20,.32) 100%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent 41%, rgba(60,40,20,.13) 42.5%, rgba(255,255,255,.55) 43.2%, transparent 46%)",
+        }}
+      />
     </div>
     <BordaCupom lado="baixo" />
   </div>
@@ -203,15 +243,53 @@ const Oportunidade = () => {
   return (
     <main className="bg-[#fef5e6] text-[#2b2b2b] pb-20 md:pb-0">
       {/* ---------------- Topo: cupom fiscal + formulário ---------------- */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: VERMELHO }}>
+      <section className="relative overflow-hidden bg-[#140806]">
+        {/* Pizza na mesa de madeira, luz quente de lado: o cupom fica "deitado" na mesma mesa. */}
+        <img
+          src={pizzaMesa1920}
+          srcSet={`${pizzaMesa960} 960w, ${pizzaMesa1920} 1920w`}
+          sizes="100vw"
+          alt=""
+          aria-hidden="true"
+          width={1920}
+          height={1080}
+          className="absolute inset-x-0 top-0 w-full h-[600px] object-cover object-[35%_70%] md:top-auto md:right-auto md:bottom-[-6%] md:left-[-22%] md:w-auto md:h-[92%] md:max-w-none md:[mask-image:linear-gradient(90deg,#000_72%,transparent_100%)] md:[-webkit-mask-image:linear-gradient(90deg,#000_72%,transparent_100%)]"
+          {...{ fetchpriority: "high" }}
+        />
         <div
           aria-hidden="true"
-          className="absolute -right-40 -top-40 w-[560px] h-[560px] rounded-full border-[40px] border-white/[0.05]"
+          className="absolute inset-0 hidden md:block"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(20,8,6,.9) 0%, rgba(20,8,6,.7) 30%, rgba(20,8,6,.15) 42%, rgba(20,8,6,0) 50%, rgba(20,8,6,.3) 70%, rgba(20,8,6,.6) 100%)",
+          }}
         />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-[601px] md:hidden"
+          style={{ background: "linear-gradient(to bottom, rgba(20,8,6,.5) 0%, rgba(20,8,6,.62) 45%, #140806 100%)" }}
+        />
+        <div aria-hidden="true" className="absolute inset-0 mix-blend-soft-light" style={{ backgroundColor: VERMELHO }} />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-1/2 hidden md:block"
+          style={{ background: "linear-gradient(to bottom, #140806 0%, #140806 22%, rgba(20,8,6,0) 100%)" }}
+        />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="relative container mx-auto px-5 pt-5 pb-12 md:pt-8 md:pb-16">
           <img src={logo} alt="Pizza Prime" width={64} height={64} className="w-14 md:w-16" />
+          {/* No celular o cupom aparece pequeno, saindo do canto, ao lado do logo. */}
+          <div
+            aria-hidden="true"
+            className="md:hidden absolute right-4 top-0 w-44 h-24 overflow-hidden pointer-events-none"
+            style={{ maskImage: "linear-gradient(to bottom, #000 55%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 55%, transparent)" }}
+          >
+            <div className="absolute -top-6 right-0 w-[340px] scale-50 origin-top-right rotate-[6deg]">
+              <Cupom deitado={false} />
+            </div>
+          </div>
 
-          <div className="grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-12 items-center mt-6 md:mt-8">
+          <div className="relative grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-12 items-center mt-6 md:mt-8">
             <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <p className="font-display uppercase text-white text-xl sm:text-2xl md:text-3xl tracking-wide">
