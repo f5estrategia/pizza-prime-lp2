@@ -221,7 +221,7 @@ const Oportunidade = () => {
                   Quanto uma pizzaria deixa na mesa todo mês?
                 </h1>
                 <p className="mt-4 text-white/85 text-base md:text-lg max-w-lg leading-relaxed">
-                  Taxas de aplicativo, insumos e bebidas pesam no caixa de toda pizzaria. Na rede Pizza Prime, a força de
+                  Taxas de aplicativo, insumos e bebidas pesam no caixa de toda pizzaria. <strong className="text-white">Na Pizza Prime</strong>, a força de
                   compra muda essa conta.
                 </p>
                 <div className="mt-6">
