@@ -12,8 +12,8 @@ import logo from "@/assets/logo-pizza-prime.webp";
 import parceiros from "@/assets/negocio/parceiros-folheto.webp";
 import inauguracao from "@/assets/negocio/inauguracao-pouso-alegre.webp";
 import convencao from "@/assets/negocio/convencao-rede.webp";
-import pizzaMesa1920 from "@/assets/negocio/hero-pizza-mesa-1920.webp";
-import pizzaMesa960 from "@/assets/negocio/hero-pizza-mesa-960.webp";
+import caixas1600 from "@/assets/negocio/hero-caixas-1600.webp";
+import caixas800 from "@/assets/negocio/hero-caixas-800.webp";
 import capaJoao from "@/assets/negocio/video-joao.webp";
 import capaMariane from "@/assets/negocio/video-mariane.webp";
 import capaViniciusVanessa from "@/assets/negocio/video-vinicius-vanessa.webp";
@@ -243,39 +243,40 @@ const Oportunidade = () => {
   return (
     <main className="bg-[#fef5e6] text-[#2b2b2b] pb-20 md:pb-0">
       {/* ---------------- Topo: cupom fiscal + formulário ---------------- */}
-      <section className="relative overflow-hidden bg-[#140806]">
-        {/* Pizza na mesa de madeira, luz quente de lado: o cupom fica "deitado" na mesma mesa. */}
-        <img
-          src={pizzaMesa1920}
-          srcSet={`${pizzaMesa960} 960w, ${pizzaMesa1920} 1920w`}
-          sizes="100vw"
-          alt=""
-          aria-hidden="true"
-          width={1920}
-          height={1080}
-          className="absolute inset-x-0 top-0 w-full h-[600px] object-cover object-[35%_70%] md:top-auto md:right-auto md:bottom-[-6%] md:left-[-22%] md:w-auto md:h-[92%] md:max-w-none md:[mask-image:linear-gradient(90deg,#000_72%,transparent_100%)] md:[-webkit-mask-image:linear-gradient(90deg,#000_72%,transparent_100%)]"
-          {...{ fetchpriority: "high" }}
-        />
+      <section
+        className="relative overflow-hidden"
+        style={{ background: "radial-gradient(ellipse 70% 90% at 58% 60%, #a3170f 0%, #7a0f0a 45%, #4a0806 100%)" }}
+      >
+        {/* Foto da própria Pizza Prime (Drive, AMBIENTADA): caixas de delivery fechadas na mesa, logo em neon ao fundo.
+            O cupom fica em cima da caixa da frente, como pedido pronto. No desktop a foto acompanha a largura do
+            conteúdo (não a da tela), para o cupom cair sobre a caixa em qualquer monitor. */}
+        <div aria-hidden="true" className="absolute inset-0 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-[1400px]">
+          <img
+            src={caixas1600}
+            srcSet={`${caixas800} 533w, ${caixas1600} 1067w`}
+            sizes="(min-width: 768px) 600px, 100vw"
+            alt=""
+            aria-hidden="true"
+            width={1067}
+            height={1600}
+            className="absolute inset-x-0 top-0 w-full h-[600px] object-cover object-[50%_35%] md:inset-x-auto md:left-[38%] md:-top-[2%] md:h-[106%] md:w-auto md:max-w-none md:brightness-[.9] md:saturate-[1.1] md:[mask-image:radial-gradient(ellipse_50%_52%_at_50%_50%,#000_50%,transparent_100%)] md:[-webkit-mask-image:radial-gradient(ellipse_50%_52%_at_50%_50%,#000_50%,transparent_100%)]"
+            {...{ fetchpriority: "high" }}
+          />
+        </div>
         <div
           aria-hidden="true"
           className="absolute inset-0 hidden md:block"
           style={{
             background:
-              "linear-gradient(90deg, rgba(20,8,6,.9) 0%, rgba(20,8,6,.7) 30%, rgba(20,8,6,.15) 42%, rgba(20,8,6,0) 50%, rgba(20,8,6,.3) 70%, rgba(20,8,6,.6) 100%)",
+              "linear-gradient(90deg, rgba(60,8,6,.55) 0%, rgba(60,8,6,.35) 30%, rgba(60,8,6,0) 45%, rgba(60,8,6,0) 70%, rgba(60,8,6,.3) 100%)",
           }}
         />
         <div
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-[601px] md:hidden"
-          style={{ background: "linear-gradient(to bottom, rgba(20,8,6,.5) 0%, rgba(20,8,6,.62) 45%, #140806 100%)" }}
+          style={{ background: "linear-gradient(to bottom, rgba(90,10,7,.62) 0%, rgba(90,10,7,.8) 40%, #5a0a07 100%)" }}
         />
-        <div aria-hidden="true" className="absolute inset-0 mix-blend-soft-light" style={{ backgroundColor: VERMELHO }} />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-1/2 hidden md:block"
-          style={{ background: "linear-gradient(to bottom, #140806 0%, #140806 22%, rgba(20,8,6,0) 100%)" }}
-        />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/25 to-transparent" />
         <div className="relative container mx-auto px-5 pt-5 pb-12 md:pt-8 md:pb-16">
           <img src={logo} alt="Pizza Prime" width={64} height={64} className="w-14 md:w-16" />
           {/* No celular o cupom aparece pequeno, saindo do canto, ao lado do logo. */}
@@ -311,7 +312,7 @@ const Oportunidade = () => {
                   <BotaoPrincipal className="w-full">Quero conversar com a expansão</BotaoPrincipal>
                 </div>
               </div>
-              <div className="hidden md:block">
+              <div className="hidden md:block md:translate-y-12">
                 <Cupom />
               </div>
             </div>
