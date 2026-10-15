@@ -9,6 +9,10 @@
       "destination": "/oportunidade/index.html"
     },
     {
+      "source": "/franquia",
+      "destination": "/franquia/index.html"
+    },
+    {
       "source": "/((?!assets/|api/).*)",
       "destination": "/index.html"
     }

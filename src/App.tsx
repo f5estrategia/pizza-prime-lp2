@@ -12,6 +12,7 @@ import { carregarGeo } from "@/lib/tracking";
 const Index = lazy(() => import("./pages/Index"));
 const Negocio = lazy(() => import("./pages/Negocio"));
 const Oportunidade = lazy(() => import("./pages/Oportunidade"));
+const Franquia = lazy(() => import("./pages/Franquia"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Privacidade = lazy(() => import("./pages/Privacidade"));
 const Obrigado = lazy(() => import("./pages/Obrigado"));
@@ -27,6 +28,7 @@ export const definirPagina = (rota: string, componente: ComponentType) => {
 const carregadores: Record<string, () => Promise<{ default: ComponentType }>> = {
   "/negocio": () => import("./pages/Negocio"),
   "/oportunidade": () => import("./pages/Oportunidade"),
+  "/franquia": () => import("./pages/Franquia"),
 };
 /** Rota pré-renderizada correspondente ao caminho atual, ou null. */
 export const rotaPreRenderizada = (caminho: string) =>
@@ -54,6 +56,7 @@ export const Rotas = () => (
       <Route path="/privacidade" element={<Privacidade />} />
       <Route path="/negocio" element={prontas["/negocio"] ? createElement(prontas["/negocio"]) : <Negocio />} />
       <Route path="/oportunidade" element={prontas["/oportunidade"] ? createElement(prontas["/oportunidade"]) : <Oportunidade />} />
+      <Route path="/franquia" element={prontas["/franquia"] ? createElement(prontas["/franquia"]) : <Franquia />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

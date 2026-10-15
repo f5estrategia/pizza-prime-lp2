@@ -104,6 +104,7 @@ export async function POST(req: Request) {
 const CONVERSOES_RD: Record<string, string> = {
   "formulario-lp-negocio": "lp-negocio-pizza-prime",
   "formulario-lp-oportunidade": "lp-oportunidade-pizza-prime",
+  "formulario-lp-franquia": "lp-franquia-pizza-prime",
 };
 
 const tag = (texto: string) =>

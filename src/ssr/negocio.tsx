@@ -2,6 +2,7 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import Negocio from "@/pages/Negocio";
 import Oportunidade from "@/pages/Oportunidade";
+import Franquia from "@/pages/Franquia";
 import { definirPagina, Provedores, Rotas } from "@/App";
 
 // Pré-renderização das LPs curtas (rodada no postbuild): o HTML já chega com o
@@ -9,6 +10,7 @@ import { definirPagina, Provedores, Rotas } from "@/App";
 // (Provedores > roteador > Rotas), para o main.tsx hidratar sem recriar nada.
 definirPagina("/negocio", Negocio);
 definirPagina("/oportunidade", Oportunidade);
+definirPagina("/franquia", Franquia);
 
 export const render = (rota: string) => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
