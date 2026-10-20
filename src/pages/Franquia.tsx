@@ -38,16 +38,18 @@ const LP = "franquia";
 const BORDO = "#7a1622";
 const BORDO_ESCURO = "#4e0d16";
 
-// Cimento queimado: base cinza com granulação fina, nuvens médias e manchas largas, só em
-// CSS (sem imagem). Em 20/10 o Augusto pediu a textura mais aparente nas faixas cinza.
-const GRAO =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .2 0 0 0 0 .2 0 0 0 .38 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")";
-const NUVENS =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.02' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .3 0 0 0 .3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
-const MANCHAS =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .3 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E\")";
-const CIMENTO: CSSProperties = { backgroundColor: "#d9d7d3", backgroundImage: `${GRAO}, ${NUVENS}, ${MANCHAS}` };
-const CIMENTO_CLARO: CSSProperties = { backgroundColor: "#e6e4e0", backgroundImage: `${GRAO}, ${NUVENS}, ${MANCHAS}` };
+// Papel claro, só em CSS (sem imagem): grão fino, fibras e manchas leves sobre base creme.
+// Cada camada usa o ruído como máscara com limiar (alfa = k * ruído - c), para a textura
+// aparecer sem virar um véu cinza por igual. Em 20/10 o Augusto pediu textura fraca de papel
+// e fundo que contraste com o bordô do texto.
+const camada = (tipo: string, tam: number, freq: string, oitavas: number, cor: number, alfa: string) =>
+  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${tam}' height='${tam}'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='${tipo}' baseFrequency='${freq}' numOctaves='${oitavas}' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 ${cor} 0 0 0 0 ${cor} 0 0 0 0 ${cor} ${alfa}'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")`;
+const GRAO = camada("fractalNoise", 200, ".85", 3, 0.3, "1 0 0 0 -0.42");
+const FIBRAS = camada("turbulence", 400, ".006 .09", 3, 0.4, "-0.9 0 0 0 0.16");
+const MANCHAS = camada("fractalNoise", 900, ".005", 3, 0.45, "0.8 0 0 0 -0.36");
+const TEXTURA = [GRAO, FIBRAS, MANCHAS].join(", ");
+const CIMENTO: CSSProperties = { backgroundColor: "#efeae2", backgroundImage: TEXTURA };
+const CIMENTO_CLARO: CSSProperties = { backgroundColor: "#f4f0e9", backgroundImage: TEXTURA };
 
 const irParaFormulario = () =>
   document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -206,7 +208,7 @@ const Franquia = () => {
     document.title = "Franquia Pizza Prime | Seu próximo grande negócio começa aqui";
     const html = document.documentElement;
     html.style.colorScheme = "light";
-    html.style.backgroundColor = "#d9d7d3";
+    html.style.backgroundColor = "#efeae2";
     return () => {
       html.style.colorScheme = "";
       html.style.backgroundColor = "";
