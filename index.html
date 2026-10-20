@@ -29,68 +29,138 @@
     <meta name="twitter:image" content="https://lp.pizzaprime.com.br/og-image.jpg">
 
     <!--
-      Correspondencia avancada do Meta Pixel.
-      PRECISA rodar antes do snippet do GTM: o PageView dispara junto com o
-      gtm.js e so enxerga o que ja estiver na dataLayer. Empurra external_id,
-      fbc, fbp e o cache de geo. Mapear em GTM -> Variavel de camada de
-      dados "user_data" -> campos de Correspondencia Avancada do Pixel.
+      Consentimento de cookies (LGPD). Nada de medição roda antes do "Ok":
+      nem o GTM (Pixel, GA4, Google Ads, Clarity), nem os cookies proprios de
+      atribuicao. Motivo: o Google Ads reprovou a LP por "site comprometido"
+      (exemplo da politica: "transmitir dado do usuario sem consentimento") e o
+      Pixel espelha os eventos num gateway da API de Conversoes na AWS. Sem o Ok,
+      o robo do Google so ve a pagina, sem nenhum dado saindo.
+      Quem ja aceitou (localStorage pp_consent = "ok") carrega tudo direto.
     -->
     <script>
       (function () {
-        var DIA = 864e5, ANO = 365 * DIA;
-        function ler(n) {
-          var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)");
-          return m ? decodeURIComponent(m[2]) : "";
-        }
-        function gravar(n, v, ms) {
-          document.cookie = n + "=" + encodeURIComponent(v) +
-            ";expires=" + new Date(Date.now() + ms).toUTCString() +
-            ";path=/;SameSite=Lax";
-        }
+        var CHAVE = "pp_consent";
+        var liberado = false;
 
-        // external_id: cookie proprio de 1 ano. E o parametro que mais levanta a nota.
-        var eid = ler("_f5eid");
-        if (!eid) eid = "f5." + Date.now().toString(36) + "." + Math.random().toString(36).slice(2, 10);
-        gravar("_f5eid", eid, ANO);
-
-        // fbc: so existe se o visitante chegou com fbclid. Persistimos por 90 dias
-        // para que a visita seguinte (organica/direta) ainda carregue a atribuicao.
-        var fbclid = new URLSearchParams(location.search).get("fbclid");
-        var fbc = ler("_fbc");
-        if (fbclid && !fbc) fbc = "fb.1." + Date.now() + "." + fbclid;
-        try {
-          if (!fbc) fbc = localStorage.getItem("pp_fbc") || "";
-          if (fbc) localStorage.setItem("pp_fbc", fbc);
-        } catch (e) {}
-        if (fbc) gravar("_fbc", fbc, 90 * DIA);
-
-        var ud = { external_id: eid };
-        if (fbc) ud.fbc = fbc;
-        var fbp = ler("_fbp");
-        if (fbp) ud.fbp = fbp;
-
-        try {
-          var geo = JSON.parse(localStorage.getItem("pp_geo") || "null");
-          if (geo) { if (geo.ct) ud.ct = geo.ct; if (geo.st) ud.st = geo.st; if (geo.country) ud.country = geo.country; }
-          // Dado pessoal do lead nao fica mais no navegador: apaga o que versoes
-          // antigas da pagina gravaram.
-          localStorage.removeItem("pp_lead_ud");
-        } catch (e) {}
-
+        // Modo de Consentimento do Google (v2, avancado): tudo negado por padrao.
+        // O GTM carrega sempre; as tags do Google mandam so sinais anonimos (sem
+        // cookie, sem identificador) ate o aceite. Meta Pixel e Clarity exigem
+        // consentimento no proprio GTM (v33) e so disparam depois do Ok.
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: "user_data_ready", user_data: ud });
+        function gtag() { window.dataLayer.push(arguments); }
+        gtag("consent", "default", {
+          ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
+          analytics_storage: "denied", wait_for_update: 500
+        });
+
+        // Correspondencia avancada do Meta Pixel: PRECISA rodar antes do GTM
+        // (o PageView dispara junto com o gtm.js e so enxerga o que ja estiver
+        // na dataLayer). Empurra external_id, fbc, fbp e o cache de geo.
+        function prepararUserData() {
+          var DIA = 864e5, ANO = 365 * DIA;
+          function ler(n) {
+            var m = document.cookie.match("(^|;)\\s*" + n + "\\s*=\\s*([^;]+)");
+            return m ? decodeURIComponent(m[2]) : "";
+          }
+          function gravar(n, v, ms) {
+            document.cookie = n + "=" + encodeURIComponent(v) +
+              ";expires=" + new Date(Date.now() + ms).toUTCString() +
+              ";path=/;SameSite=Lax";
+          }
+
+          // external_id: cookie proprio de 1 ano. E o parametro que mais levanta a nota.
+          var eid = ler("_f5eid");
+          if (!eid) eid = "f5." + Date.now().toString(36) + "." + Math.random().toString(36).slice(2, 10);
+          gravar("_f5eid", eid, ANO);
+
+          // fbc: so existe se o visitante chegou com fbclid. Persistimos por 90 dias
+          // para que a visita seguinte (organica/direta) ainda carregue a atribuicao.
+          var fbclid = new URLSearchParams(location.search).get("fbclid");
+          var fbc = ler("_fbc");
+          if (fbclid && !fbc) fbc = "fb.1." + Date.now() + "." + fbclid;
+          try {
+            if (!fbc) fbc = localStorage.getItem("pp_fbc") || "";
+            if (fbc) localStorage.setItem("pp_fbc", fbc);
+          } catch (e) {}
+          if (fbc) gravar("_fbc", fbc, 90 * DIA);
+
+          var ud = { external_id: eid };
+          if (fbc) ud.fbc = fbc;
+          var fbp = ler("_fbp");
+          if (fbp) ud.fbp = fbp;
+
+          try {
+            var geo = JSON.parse(localStorage.getItem("pp_geo") || "null");
+            if (geo) { if (geo.ct) ud.ct = geo.ct; if (geo.st) ud.st = geo.st; if (geo.country) ud.country = geo.country; }
+          } catch (e) {}
+
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: "user_data_ready", user_data: ud });
+        }
+
+        // Google Tag Manager (GTM-PCL98LNF)
+        function carregarGTM() {
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-PCL98LNF');
+        }
+
+        window.ppConsentir = function (clique) {
+          try { localStorage.setItem(CHAVE, "ok"); } catch (e) {}
+          var aviso = document.getElementById("pp-cookies");
+          if (aviso) aviso.remove();
+          if (liberado) return;
+          liberado = true;
+          prepararUserData();
+          gtag("consent", "update", {
+            ad_storage: "granted", ad_user_data: "granted", ad_personalization: "granted",
+            analytics_storage: "granted"
+          });
+          // So no clique: quem ja tinha aceitado carrega o GTM com tudo liberado e
+          // o All Pages dispara normal. O evento evitaria PageView dobrado.
+          if (clique) window.dataLayer.push({ event: "consentimento_ok" });
+        };
+
+        // "Rejeitar": guarda a escolha para o aviso nao voltar e segue sem medicao.
+        window.ppRecusar = function () {
+          try { localStorage.setItem(CHAVE, "recusado"); } catch (e) {}
+          var aviso = document.getElementById("pp-cookies");
+          if (aviso) aviso.remove();
+        };
+
+        // Dado pessoal do lead nao fica no navegador: apaga o que versoes antigas gravaram.
+        try { localStorage.removeItem("pp_lead_ud"); } catch (e) {}
+
+        var escolha = "";
+        try { escolha = localStorage.getItem(CHAVE) || ""; } catch (e) {}
+        if (escolha === "ok") window.ppConsentir();
+        else if (escolha !== "recusado") document.documentElement.setAttribute("data-pp-cookies", "pendente");
+        carregarGTM();
       })();
     </script>
-
-    <!-- Google Tag Manager -->
-    <script>
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-PCL98LNF');
-    </script>
-    <!-- End Google Tag Manager -->
+    <style>
+      #pp-cookies { display: none; }
+      html[data-pp-cookies="pendente"] #pp-cookies {
+        display: flex; position: fixed; z-index: 2147483000; left: 50%; transform: translateX(-50%);
+        bottom: 0; width: 100%; max-width: 960px; box-sizing: border-box;
+        align-items: center; gap: 16px; padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+        background: #fff; color: #333; border-radius: 12px 12px 0 0;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.18); font: 400 13px/1.45 "Roboto Slab", Georgia, serif;
+      }
+      #pp-cookies p { margin: 0; flex: 1; }
+      #pp-cookies p a { color: #8a1c15; text-decoration: underline; }
+      #pp-cookies .pp-acoes { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+      #pp-cookies button { border: 0; cursor: pointer; font: 700 13px/1 "Roboto Slab", Georgia, serif; }
+      #pp-cookies .pp-recusar { color: #666; text-decoration: none; font-size: 13px; padding: 10px 14px 10px 0; border-right: 1px solid #ddd; }
+      #pp-cookies .pp-recusar:hover { color: #333; }
+      #pp-cookies .pp-aceitar { background: #8a1c15; color: #fff; border-radius: 8px; padding: 11px 26px; }
+      @media (max-width: 600px) {
+        html[data-pp-cookies="pendente"] #pp-cookies { flex-direction: column; align-items: stretch; gap: 10px; text-align: center; }
+        #pp-cookies .pp-acoes { justify-content: center; }
+      }
+    </style>
     <meta property="og:title" content="Pizza Prime Franchising — Seja um Franqueado">
   <meta name="twitter:title" content="Pizza Prime Franchising — Seja um Franqueado">
   <meta property="og:description" content="Invista em uma das maiores redes brasileiras de pizzarias. Franquia Pizza Prime no modelo Delivery a partir de R$ 249 mil, com suporte completo e modelo validado em +100 unidades.">
@@ -101,15 +171,17 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-PCL98LNF"
-        height="0"
-        width="0"
-        style="display:none;visibility:hidden"
-      ></iframe
-    ></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- Aviso de cookies: a medicao so liga no "Ok" (ver script no head). -->
+    <div id="pp-cookies" role="region" aria-label="Aviso de cookies">
+      <p>
+        Usamos cookies para melhorar a sua experiência.
+        <a href="%BASE_URL%privacidade">Saiba mais</a>
+      </p>
+      <div class="pp-acoes">
+        <a href="#" class="pp-recusar" onclick="ppRecusar(); return false;">Rejeitar</a>
+        <button type="button" class="pp-aceitar" onclick="ppConsentir(true)">Ok</button>
+      </div>
+    </div>
+
   </body>
 </html>

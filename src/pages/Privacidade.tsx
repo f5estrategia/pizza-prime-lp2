@@ -76,7 +76,9 @@ const Privacidade = () => {
           <p>
             Usamos cookies e tecnologias semelhantes, próprios e de parceiros, para medir audiência e o resultado
             de anúncios: Google Tag Manager, Google Analytics e Google Ads (Google), Meta Pixel (Meta) e Microsoft
-            Clarity (Microsoft). Esses parceiros tratam os dados conforme as suas próprias políticas de privacidade.
+            Clarity (Microsoft). Antes de você clicar em "Ok" no aviso de cookies, nenhum cookie de medição é gravado: o
+            Meta Pixel e o Clarity ficam desligados, e as ferramentas do Google recebem apenas sinais anônimos, sem
+            cookies nem identificação. Os parceiros tratam os dados conforme as suas próprias políticas de privacidade.
           </p>
           <p>
             Você pode bloquear ou apagar cookies nas configurações do seu navegador. Algumas medições deixam de

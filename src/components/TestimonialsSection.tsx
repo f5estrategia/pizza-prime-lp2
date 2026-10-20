@@ -43,7 +43,7 @@ const TestimonialsSection = () => {
             {videos.map((v, i) =>
             <div key={i} className="aspect-video rounded-xl overflow-hidden shadow-lg">
                 <iframe
-                src={`https://www.youtube.com/embed/${v.id}`}
+                src={`https://www.youtube-nocookie.com/embed/${v.id}`}
                 title={v.name}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -66,7 +66,7 @@ const TestimonialsSection = () => {
                 
                 <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
                   <iframe
-                    src={`https://www.youtube.com/embed/${videos[currentVideo].id}`}
+                    src={`https://www.youtube-nocookie.com/embed/${videos[currentVideo].id}`}
                     title={videos[currentVideo].name}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen

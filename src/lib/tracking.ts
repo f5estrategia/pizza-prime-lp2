@@ -97,6 +97,37 @@ export const getFbc = (): string =>
 
 export const getFbp = (): string => lerCookie("_fbp");
 
+// ------------------------------------------------------------- origem da visita
+// O form lia UTM só da URL atual: quem clicava no anúncio, navegava ou voltava outro
+// dia chegava sem UTM e o lead entrava sem origem (set/2026: Google Ads 26 conversões
+// x 12 com utm_source=google na planilha). Guarda a origem da última visita que veio
+// com parâmetro (mesma lógica de último clique do Google/Meta) por 30 dias. Só
+// parâmetro de campanha, nenhum dado pessoal.
+
+const STORAGE_ORIGEM = "pp_origem";
+const TRINTA_DIAS = 30 * UM_DIA;
+
+export const CAMPOS_ORIGEM = [
+  "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "utm_id", "fbclid", "gclid",
+] as const;
+
+export type Origem = Record<(typeof CAMPOS_ORIGEM)[number], string>;
+
+/** Origem da URL atual; sem parâmetro na URL, a última guardada (até 30 dias). */
+export const origemDaVisita = (): Origem => {
+  const params = new URLSearchParams(window.location.search);
+  const daUrl = Object.fromEntries(CAMPOS_ORIGEM.map((c) => [c, params.get(c) || ""])) as Origem;
+
+  if (CAMPOS_ORIGEM.some((c) => daUrl[c])) {
+    gravarJson(STORAGE_ORIGEM, { ts: Date.now(), ...daUrl });
+    return daUrl;
+  }
+
+  const { ts, ...guardada } = lerJson<{ ts?: number } & Partial<Origem>>(STORAGE_ORIGEM) || {};
+  if (!ts || Date.now() - ts > TRINTA_DIAS) return daUrl;
+  return Object.fromEntries(CAMPOS_ORIGEM.map((c) => [c, guardada[c] || ""])) as Origem;
+};
+
 /** Monta o user_data com tudo que existe no momento da chamada. */
 export const buildUserData = (extra: Partial<UserData> = {}): UserData => {
   const { ts: _ts, ...geo } = lerJson<{ ts?: number } & Partial<UserData>>(STORAGE_GEO) || {};

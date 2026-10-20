@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createElement, lazy, Suspense, useEffect, type ComponentType, type ReactNode } from "react";
-import { carregarGeo } from "@/lib/tracking";
+import { carregarGeo, origemDaVisita } from "@/lib/tracking";
 
 // Cada LP em um bundle próprio: a /negocio não baixa os componentes da LP
 // principal. O postbuild põe modulepreload do bundle de cada página no HTML,
@@ -66,7 +66,9 @@ export const Rotas = () => (
 const App = () => {
   // Geo (headers da Vercel via /api/geo) em cache: alimenta cidade/estado/pais dos proximos eventos.
   // O bootstrap no index.html le esse cache antes do GTM subir.
+  // A origem é guardada já na entrada, valha a página que for (ver origemDaVisita).
   useEffect(() => {
+    origemDaVisita();
     carregarGeo();
   }, []);
 

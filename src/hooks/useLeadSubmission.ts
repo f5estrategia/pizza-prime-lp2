@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API_BASE, dadosDoLead, buildUserData, getFbc, getFbp, getExternalId } from "@/lib/tracking";
+import { API_BASE, dadosDoLead, buildUserData, getFbc, getFbp, getExternalId, origemDaVisita } from "@/lib/tracking";
 
 // Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio.
 // O Meta Pixel é disparado exclusivamente pelo GTM (GTM-PCL98LNF), não direto aqui.
@@ -75,29 +75,20 @@ export const useLeadSubmission = ({ identificador, lp, deduzirOrigem = false }: 
   const [enviado, setEnviado] = useState(false);
   const [erroEnvio, setErroEnvio] = useState(false);
 
-  // Captura UTMs da URL e define a Data da Conversão
+  // Captura UTMs (da URL ou da última visita com parâmetro) e define a Data da Conversão
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
     const dataAtual = new Date().toLocaleDateString("pt-BR");
+    const origem = origemDaVisita();
 
-    let utm_source = params.get("utm_source") || "";
-    let utm_medium = params.get("utm_medium") || "";
-    if (deduzirOrigem && !utm_source) {
-      utm_source = origemPeloReferrer(document.referrer);
-      utm_medium = utm_medium || (lp ? `lp-${lp}` : "lp");
+    if (deduzirOrigem && !origem.utm_source) {
+      origem.utm_source = origemPeloReferrer(document.referrer);
+      origem.utm_medium = origem.utm_medium || (lp ? `lp-${lp}` : "lp");
     }
 
     setFormData((prev) => ({
       ...prev,
       data_conversao: dataAtual,
-      utm_source,
-      utm_medium,
-      utm_campaign: params.get("utm_campaign") || "",
-      utm_content: params.get("utm_content") || "",
-      utm_term: params.get("utm_term") || "",
-      utm_id: params.get("utm_id") || "",
-      fbclid: params.get("fbclid") || "",
-      gclid: params.get("gclid") || "",
+      ...origem,
       fbc: getFbc(),
       fbp: getFbp(),
       external_id: getExternalId(),
