@@ -55,14 +55,14 @@ const PAGINAS = [
     modulo: "src/pages/Oportunidade.tsx",
     title: "Franquia Pizza Prime | A força de uma rede na conta da sua pizzaria",
     description:
-      "A maior rede brasileira de pizzarias: mais de 100 unidades, média de 3 lojas por franqueado e o modelo Delivery a partir de R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
+      "Uma das maiores redes de pizzarias do Brasil: mais de 100 unidades, média de 3 lojas por franqueado e o modelo Delivery a partir de R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
   },
   {
     rota: "/franquia",
     modulo: "src/pages/Franquia.tsx",
     title: "Franquia Pizza Prime | Seu próximo grande negócio começa aqui",
     description:
-      "Pizza vende 365 dias por ano. Entre na maior rede brasileira de pizzarias: +100 unidades, suporte do primeiro passo em diante e o modelo Delivery por R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
+      "Pizza vende 365 dias por ano. Entre em uma das maiores redes de pizzarias do Brasil: +100 unidades, suporte do primeiro passo em diante e o modelo Delivery por R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
   },
 ];
 
