@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import { carregarGeo } from "@/lib/tracking";
+import { carregarGeo, origemDaVisita } from "@/lib/tracking";
 import Index from "./pages/Index";
 import Obrigado from "./pages/Obrigado";
 import Privacidade from "./pages/Privacidade";
@@ -15,7 +15,9 @@ const queryClient = new QueryClient();
 const App = () => {
   // Geo (headers da Vercel via /api/geo) em cache: alimenta cidade/estado/pais dos proximos eventos.
   // O bootstrap no index.html le esse cache antes do GTM subir.
+  // A origem é guardada já na entrada, valha a página que for (ver origemDaVisita).
   useEffect(() => {
+    origemDaVisita();
     carregarGeo();
   }, []);
 

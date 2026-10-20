@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
-import { API_BASE, dadosDoLead, buildUserData, getFbc, getFbp, getExternalId } from "@/lib/tracking";
+import { API_BASE, dadosDoLead, buildUserData, getFbc, getFbp, getExternalId, origemDaVisita } from "@/lib/tracking";
 
 // Tipagem para garantir que o TypeScript não acuse erro nos scripts de rastreio.
 // O Meta Pixel é disparado exclusivamente pelo GTM (GTM-PCL98LNF), não direto aqui.
@@ -45,22 +45,14 @@ const MultiStepFranchiseForm = () => {
     external_id: "",
   });
 
-  // Captura UTMs da URL e define a Data da Conversão
+  // Captura UTMs (da URL ou da última visita com parâmetro) e define a Data da Conversão
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
     const dataAtual = new Date().toLocaleDateString("pt-BR");
 
     setFormData((prev) => ({
       ...prev,
       data_conversao: dataAtual,
-      utm_source: params.get("utm_source") || "",
-      utm_medium: params.get("utm_medium") || "",
-      utm_campaign: params.get("utm_campaign") || "",
-      utm_content: params.get("utm_content") || "",
-      utm_term: params.get("utm_term") || "",
-      utm_id: params.get("utm_id") || "",
-      fbclid: params.get("fbclid") || "",
-      gclid: params.get("gclid") || "",
+      ...origemDaVisita(),
       fbc: getFbc(),
       fbp: getFbp(),
       external_id: getExternalId(),
