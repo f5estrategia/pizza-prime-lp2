@@ -102,7 +102,7 @@ const LeadFormNegocio = ({
       <h2 className="font-display uppercase text-white text-2xl sm:text-3xl leading-tight text-center">Fale com o time de expansão</h2>
       <p className="text-center text-sm text-white/65 mt-1 mb-4">
         {etapa === 1 ? "Tire suas dúvidas sobre investimento, operação e disponibilidade na sua cidade." : "Falta pouco: sobre a sua unidade."}
-        <span className="text-white/45"> Etapa {etapa} de 2</span>
+        <span className="text-white/45"> Etapa {etapa} de 2 · * campos obrigatórios</span>
       </p>
       <div className="h-1 rounded-full bg-white/10 mb-5" aria-hidden="true">
         <div className={`h-1 rounded-full bg-secondary transition-all ${etapa === 1 ? "w-1/2" : "w-full"}`} />
@@ -112,15 +112,15 @@ const LeadFormNegocio = ({
         <div role="form" aria-label="Seus dados" onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), avancar())} className="space-y-3">
           <label className="block">
             <span className="sr-only">Nome</span>
-            <input className={campo} name="nome" autoComplete="name" placeholder="Nome completo" value={formData.nome} onChange={mudar("nome")} required />
+            <input className={campo} name="nome" autoComplete="name" placeholder="Nome completo *" value={formData.nome} onChange={mudar("nome")} required />
           </label>
           <label className="block">
             <span className="sr-only">E-mail</span>
-            <input className={campo} name="email" type="email" inputMode="email" autoComplete="email" placeholder="E-mail" value={formData.email} onChange={mudar("email")} required />
+            <input className={campo} name="email" type="email" inputMode="email" autoComplete="email" placeholder="E-mail *" value={formData.email} onChange={mudar("email")} required />
           </label>
           <label className="block">
             <span className="sr-only">WhatsApp com DDD</span>
-            <input className={campo} name="telefone" type="tel" inputMode="tel" autoComplete="tel" placeholder="WhatsApp com DDD" value={formData.telefone} onChange={mudar("telefone")} required />
+            <input className={campo} name="telefone" type="tel" inputMode="tel" autoComplete="tel" placeholder="WhatsApp com DDD *" value={formData.telefone} onChange={mudar("telefone")} required />
           </label>
           {erro && <p role="alert" className="text-sm text-secondary font-semibold">{erro}</p>}
           <button type="button" onClick={avancar} className="w-full h-14 rounded-lg bg-secondary text-[#0E0E0E] text-base font-extrabold uppercase tracking-wide hover:brightness-105 active:scale-[0.98] transition">
@@ -130,15 +130,15 @@ const LeadFormNegocio = ({
       ) : (
         <div role="form" aria-label="Sobre a sua unidade" onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLElement).tagName === "INPUT" && (e.preventDefault(), concluir())} className="space-y-5">
           <label className="block">
-            <span className="block text-sm font-bold text-white mb-2">Em que cidade quer abrir a unidade?</span>
+            <span className="block text-sm font-bold text-white mb-2">Em que cidade quer abrir a unidade? *</span>
             <input className={campo} name="cidade" autoComplete="address-level2" placeholder="Ex.: Ribeirão Preto - SP" value={formData.cidade} onChange={mudar("cidade")} required />
           </label>
           <div>
-            <span className="block text-sm font-bold text-white mb-2">Prazo para abrir</span>
+            <span className="block text-sm font-bold text-white mb-2">Prazo para abrir *</span>
             <Chips nome="Prazo para abrir" opcoes={PRAZOS} valor={formData.prazo} aoEscolher={(v) => setCampo("prazo", v)} />
           </div>
           <div>
-            <span className="block text-sm font-bold text-white mb-2">Investimento disponível</span>
+            <span className="block text-sm font-bold text-white mb-2">Investimento disponível *</span>
             <Chips nome="Investimento disponível" opcoes={CAPITAIS} valor={formData.capital} aoEscolher={(v) => setCampo("capital", v)} />
           </div>
           {erro && <p role="alert" className="text-sm text-secondary font-semibold">{erro}</p>}

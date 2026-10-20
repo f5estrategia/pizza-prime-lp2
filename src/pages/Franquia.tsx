@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   Award, TrendingUp, ChefHat, Headset, GraduationCap, Workflow, Megaphone, MonitorSmartphone,
-  Rocket, ChartNoAxesCombined, ClipboardCheck, Check, CircleCheck,
+  Rocket, ChartNoAxesCombined, ClipboardCheck, Check, CircleCheck, Star, Split,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import LeadFormNegocio from "@/components/LeadFormNegocio";
@@ -28,14 +28,26 @@ import whatsappIcon from "@/assets/whatsapp-icon.webp";
 // Terceira versão da LP da matéria (/franquia), pedida pelo Diego em 14/10/2026: segue
 // o folheto da Feira de Curitiba, para quem quer comprar uma franquia sem ser dono de
 // restaurante (primeiro negócio, diversificação, negócio conduzido por processo).
-// A /oportunidade (folheto Pizza Masters, donos de restaurante) e a /negocio ficam
-// guardadas como estão. Decisões do Augusto: R$ 249 mil + R$ 50 mil no topo (o
-// folheto destaca o Smart de R$ 199 mil) e 11 estados (o folheto diz 10).
+// Em 20/10 (Runrun 232469) ganhou o visual do material novo da rede (cimento queimado
+// e bordô, sem copiar as peças) e os gatilhos dele: ecossistema em roda, "3 motivos para
+// investir", #PrimeEmTodoLugar e #TodoMundoÉPrime. Decisões do Augusto: R$ 249 mil +
+// R$ 50 mil no topo, +100 unidades em 11 estados (o material diz 150), retorno de 18 a
+// 24 meses (o material diz 18) e os 3 perfis do folheto de Curitiba no "para quem é".
 
 const LP = "franquia";
-const VERMELHO = "#9b1b16";
-const LARANJA = "#f4a21b";
-const PAPEL = "#fbf3e3";
+const BORDO = "#7a1622";
+const BORDO_ESCURO = "#4e0d16";
+
+// Cimento queimado: base cinza com granulação fina, nuvens médias e manchas largas, só em
+// CSS (sem imagem). Em 20/10 o Augusto pediu a textura mais aparente nas faixas cinza.
+const GRAO =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .2 0 0 0 0 .2 0 0 0 .38 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")";
+const NUVENS =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.02' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .3 0 0 0 .3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+const MANCHAS =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .3 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E\")";
+const CIMENTO: CSSProperties = { backgroundColor: "#d9d7d3", backgroundImage: `${GRAO}, ${NUVENS}, ${MANCHAS}` };
+const CIMENTO_CLARO: CSSProperties = { backgroundColor: "#e6e4e0", backgroundImage: `${GRAO}, ${NUVENS}, ${MANCHAS}` };
 
 const irParaFormulario = () =>
   document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -50,10 +62,8 @@ const BotaoPrincipal = ({ children, className = "" }: { children: ReactNode; cla
   </button>
 );
 
-/** Filete duplo vermelho, como o cabeçalho do jornal do folheto. */
-const Filete = ({ className = "" }: { className?: string }) => (
-  <div aria-hidden="true" className={`border-t-2 border-b border-[#9b1b16] h-1 ${className}`} />
-);
+/** Traço curto bordô acima dos títulos, como no material da rede. */
+const Traco = () => <div aria-hidden="true" className="w-24 h-1.5 rounded-full mb-5" style={{ backgroundColor: BORDO }} />;
 
 // ------------------------------------------------------------------ dados
 
@@ -70,15 +80,16 @@ const SEM_MEDO = [
   { medo: "Tenho medo de empreender sozinho", resposta: "Acompanhamento em cada etapa: da escolha do ponto à operação do dia a dia." },
 ];
 
+// Na ordem da roda do material, a partir do topo, em sentido horário.
 const ECOSSISTEMA = [
-  { icone: Award, titulo: "Marca forte", texto: "Força e reconhecimento de rede nacional." },
-  { icone: TrendingUp, titulo: "Poder de escala", texto: "A força da rede nas negociações. Melhores condições para operar." },
-  { icone: ChefHat, titulo: "Cozinha central", texto: "Insumos porcionados. Mais agilidade e menos desperdício." },
-  { icone: Headset, titulo: "Suporte completo", texto: "Você nunca está sozinho. Suporte da implantação ao crescimento." },
   { icone: GraduationCap, titulo: "Treinamento total", texto: "Capacitação com a metodologia Pizza Prime." },
-  { icone: Workflow, titulo: "Operação eficiente", texto: "Processos padronizados que agilizam o dia a dia, do pedido ao balcão." },
+  { icone: Workflow, titulo: "Operação eficiente", texto: "Processos padronizados, do pedido ao balcão." },
+  { icone: Award, titulo: "Rede forte, marca forte", texto: "Força e reconhecimento de rede nacional." },
+  { icone: ChefHat, titulo: "Insumos porcionados", texto: "Cozinha central: mais agilidade, menos desperdício." },
+  { icone: MonitorSmartphone, titulo: "Venda por vários canais", texto: "App próprio, e-commerce e marketplaces." },
+  { icone: TrendingUp, titulo: "Poder de escala", texto: "A força da rede nas negociações." },
   { icone: Megaphone, titulo: "Marketing de ponta a ponta", texto: "Estratégias e campanhas para gerar demanda." },
-  { icone: MonitorSmartphone, titulo: "Multicanais", texto: "App próprio, e-commerce e marketplaces. Mais possibilidades de venda." },
+  { icone: Headset, titulo: "Suporte completo", texto: "Você nunca está sozinho, da implantação ao crescimento." },
 ];
 
 const PARA_QUEM = [
@@ -90,12 +101,18 @@ const PARA_QUEM = [
 const PERFIS = ["Médico cardiologista", "Banker e esposa", "Empresários de estética", "Pai e filho", "Administrador de grupo empresarial"];
 
 const NUMEROS = [
-  { valor: "+100", texto: "unidades em 11 estados e agora no Paraguai" },
+  { valor: "+100", texto: "unidades em 11 estados e no Paraguai" },
   { valor: "3", texto: "unidades em média por franqueado" },
-  { valor: "22%", texto: "de crescimento da rede em 2025, acima da média do mercado" },
+  { valor: "22%", texto: "foi quanto a Pizza Prime cresceu em 2025" },
   { valor: "R$ 3 mi", texto: "de faturamento médio por loja ao ano", estimativa: true },
   { valor: "12-16%", texto: "de lucratividade média", estimativa: true },
-  { valor: "18-24", texto: "meses de retorno estimado no modelo Smart Delivery", estimativa: true },
+  { valor: "18-24", texto: "meses de payback estimado no modelo Delivery", estimativa: true },
+];
+
+const MOTIVOS = [
+  { icone: ClipboardCheck, titulo: "Modelo validado", texto: "+100 unidades pelo Brasil e no Paraguai." },
+  { icone: Star, titulo: "Força de marca", texto: "Reconhecimento e alta demanda em todas as regiões." },
+  { icone: Split, titulo: "Vantagem operacional", texto: "Acesso a territórios exclusivos em cidades-chave." },
 ];
 
 const DEPOIMENTOS = [
@@ -122,6 +139,63 @@ const SELOS = [
 const AVISO =
   "Médias e estimativas da rede Pizza Prime. O resultado de cada unidade varia conforme a cidade, o ponto, a gestão e o mercado, e não há garantia de retorno. Todas as condições estão na Circular de Oferta de Franquia (COF), que você recebe antes de assinar qualquer contrato.";
 
+// ------------------------------------------------------------------ roda do ecossistema
+
+const RODA = 720; // lado da área da roda no desktop (px)
+const RAIO = 262; // distância do centro até cada card
+
+/** Desktop: os 8 itens em volta do círculo central. Celular e tablet: lista em cards. */
+const RodaEcossistema = () => (
+  <>
+    <div className="hidden lg:block relative mx-auto" style={{ width: RODA, height: RODA }}>
+      <div aria-hidden="true" className="absolute rounded-full border-2 border-secondary/70" style={{ inset: RODA / 2 - RAIO }} />
+      <div
+        className="absolute rounded-full flex items-center justify-center text-center text-white shadow-2xl"
+        style={{ inset: RODA / 2 - 140, backgroundColor: BORDO }}
+      >
+        <p className="font-display uppercase text-3xl leading-[1.1] px-10">
+          Ecossistema que faz sua loja <span className="text-secondary">crescer e vender mais</span>
+        </p>
+      </div>
+      {ECOSSISTEMA.map(({ icone: Icone, titulo, texto }, i) => {
+        const angulo = ((-90 + i * 45) * Math.PI) / 180;
+        return (
+          <div
+            key={titulo}
+            className="absolute w-44 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white/95 shadow-md p-3 text-center"
+            style={{ left: RODA / 2 + RAIO * Math.cos(angulo), top: RODA / 2 + RAIO * Math.sin(angulo) }}
+          >
+            <Icone className="w-6 h-6 mx-auto" style={{ color: BORDO }} aria-hidden="true" />
+            <h3 className="font-display uppercase text-lg leading-tight mt-1" style={{ color: BORDO }}>{titulo}</h3>
+            <p className="text-xs text-[#555] mt-1 leading-snug">{texto}</p>
+          </div>
+        );
+      })}
+    </div>
+
+    <div className="lg:hidden">
+      <div className="rounded-2xl p-5 text-white text-center mb-3" style={{ backgroundColor: BORDO }}>
+        <p className="font-display uppercase text-2xl leading-tight">
+          Ecossistema que faz sua loja <span className="text-secondary">crescer e vender mais</span>
+        </p>
+      </div>
+      <ul className="grid sm:grid-cols-2 gap-3">
+        {ECOSSISTEMA.map(({ icone: Icone, titulo, texto }) => (
+          <li key={titulo} className="rounded-2xl bg-white/95 p-4 flex gap-4">
+            <span className="w-11 h-11 rounded-full bg-[#7a1622]/10 flex items-center justify-center shrink-0">
+              <Icone className="w-5 h-5 text-[#7a1622]" aria-hidden="true" />
+            </span>
+            <div>
+              <h3 className="font-display uppercase text-lg text-[#7a1622] leading-tight">{titulo}</h3>
+              <p className="text-sm text-[#555] mt-0.5 leading-relaxed">{texto}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </>
+);
+
 // ------------------------------------------------------------------ página
 
 const Franquia = () => {
@@ -132,7 +206,7 @@ const Franquia = () => {
     document.title = "Franquia Pizza Prime | Seu próximo grande negócio começa aqui";
     const html = document.documentElement;
     html.style.colorScheme = "light";
-    html.style.backgroundColor = PAPEL;
+    html.style.backgroundColor = "#d9d7d3";
     return () => {
       html.style.colorScheme = "";
       html.style.backgroundColor = "";
@@ -158,48 +232,35 @@ const Franquia = () => {
   }, []);
 
   return (
-    <main className="bg-[#fbf3e3] text-[#2b2b2b] pb-20 md:pb-0">
-      {/* ---------------- Topo: capa de jornal, como o folheto ---------------- */}
-      <section className="relative">
-        <div className="container mx-auto px-5 pt-4 md:pt-6 pb-12 md:pb-16">
-          {/* Cabeçalho do jornal */}
-          <div className="flex items-center justify-between font-serif uppercase text-[10px] md:text-xs tracking-wider text-[#9b1b16]">
-            <span>Edição especial</span>
-            <span className="hidden sm:inline">A maior rede brasileira de pizzarias</span>
-            <span>Exemplar gratuito</span>
-          </div>
-          <Filete className="mt-2" />
-          <div className="flex items-center justify-between gap-4 py-3 md:py-4">
-            <img src={logo} alt="Pizza Prime" width={112} height={112} className="w-20 md:w-28 shrink-0" />
-            <p className="font-serif italic font-bold text-[#9b1b16] text-3xl sm:text-4xl md:text-5xl leading-none tracking-tight">Prime Times</p>
-          </div>
-          <Filete />
-          <p className="sm:hidden mt-2 font-serif uppercase text-[10px] tracking-wider text-[#9b1b16] text-center">
-            A maior rede brasileira de pizzarias
-          </p>
+    <main className="text-[#2b2b2b] pb-20 md:pb-0" style={CIMENTO}>
+      {/* ---------------- Topo ---------------- */}
+      <section className="relative overflow-hidden">
+        <div className="relative container mx-auto px-5 pt-4 md:pt-6 pb-12 md:pb-16">
+          <img src={logo} alt="Pizza Prime" width={112} height={112} className="w-20 md:w-28" />
 
           <div className="grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-12 items-start mt-8 md:mt-10">
             <div className="grid md:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-8 items-start">
               <div>
-                <h1 className="font-display uppercase text-[#9b1b16] text-[2.7rem] sm:text-6xl lg:text-[4.4rem] leading-[1.05] sm:leading-[1.05] lg:leading-[1.05]">
+                <h1 className="font-display uppercase text-[#7a1622] text-[2.7rem] sm:text-6xl lg:text-[4.4rem] leading-[1.05] sm:leading-[1.05] lg:leading-[1.05]">
                   Seu próximo grande negócio começa aqui
                 </h1>
-                <p className="mt-6 max-w-xl border-l-4 border-secondary pl-4 font-serif italic font-bold text-[#9b1b16] text-2xl md:text-[2rem] leading-snug">
+                <p className="mt-6 max-w-xl border-l-4 border-secondary pl-4 font-serif italic font-bold text-[#7a1622] text-2xl md:text-[2rem] leading-snug">
                   Enquanto você lê isso, uma pizza está sendo vendida em algum lugar do Brasil.
                 </p>
-                <p className="mt-4 text-base md:text-lg leading-relaxed text-[#3a3a3a] max-w-xl">
-                  Entre em um mercado que não para, com o suporte de uma rede que já provou que funciona.
+                <p className="mt-4 text-base md:text-lg leading-relaxed text-[#333] max-w-xl">
+                  Mais que pizzas: <strong>um ecossistema completo para o seu negócio</strong>, em um mercado que não para e com
+                  o suporte de uma rede que já provou que funciona.
                 </p>
                 <ul className="mt-5 space-y-2">
                   {["Sem sazonalidade", "Com segurança", "E previsibilidade"].map((t) => (
-                    <li key={t} className="flex items-center gap-2 font-bold text-[#9b1b16] text-lg">
+                    <li key={t} className="flex items-center gap-2 font-bold text-[#7a1622] text-lg">
                       <CircleCheck className="w-5 h-5 shrink-0" aria-hidden="true" />
                       {t}
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-7 inline-block rounded-2xl border-[3px] border-secondary px-6 py-4 text-white" style={{ backgroundColor: VERMELHO }}>
+                <div className="mt-7 inline-block rounded-2xl border-[3px] border-secondary px-6 py-4 text-white shadow-xl" style={{ backgroundColor: BORDO }}>
                   <p className="font-display uppercase tracking-[0.18em] text-secondary text-sm md:text-base">Investimento no modelo Delivery</p>
                   <p className="font-display text-5xl md:text-7xl leading-none mt-1">R$ 249 MIL</p>
                   <p className="text-white/85 text-sm md:text-base font-bold mt-2">+ R$ 50 mil de capital de giro e estoque</p>
@@ -210,33 +271,33 @@ const Franquia = () => {
                 </div>
               </div>
 
-              {/* Painel laranja com a foto, como a capa do folheto */}
-              <div className="relative rounded-3xl overflow-hidden" style={{ backgroundColor: LARANJA }}>
+              {/* Foto da própria rede (queijo puxando, logo ao fundo) em painel bordô */}
+              <div className="relative rounded-3xl overflow-hidden shadow-xl" style={{ backgroundColor: BORDO }}>
                 <img
                   src={fatia1000}
                   srcSet={`${fatia500} 500w, ${fatia1000} 1000w`}
                   sizes="(min-width: 768px) 320px, 100vw"
-                  alt="Fatia de pizza de pepperoni da Pizza Prime e copo de guaraná"
+                  alt="Fatia de pizza Pizza Prime com queijo puxando"
                   width={1000}
                   height={1250}
-                  className="w-full h-[22rem] sm:h-96 md:h-auto object-cover object-[50%_20%] md:object-[50%_30%]"
+                  className="w-full h-[22rem] sm:h-96 md:h-auto object-cover object-[50%_25%]"
                   {...{ fetchpriority: "high" }}
                 />
-                <div className="absolute inset-x-0 bottom-0 p-5 pt-10 md:pt-16 bg-gradient-to-t from-[#f4a21b] via-[#f4a21b]/80 to-transparent">
-                  <p className="font-display uppercase text-[#9b1b16] leading-[0.9]">
-                    <span className="block text-6xl md:text-8xl">365</span>
-                    <span className="block text-2xl md:text-4xl">dias por ano</span>
+                <div className="absolute inset-x-0 bottom-0 p-5 pt-14 md:pt-20" style={{ background: `linear-gradient(to top, ${BORDO_ESCURO} 15%, ${BORDO_ESCURO}cc 45%, transparent)` }}>
+                  <p className="font-display uppercase leading-[0.9]">
+                    <span className="block text-6xl md:text-8xl text-secondary">365</span>
+                    <span className="block text-2xl md:text-4xl text-white">dias por ano</span>
                   </p>
                 </div>
               </div>
             </div>
 
             <section id="formulario" ref={formRef} aria-label="Formulário" className="scroll-mt-4">
-              <LeadFormNegocio identificador="formulario-lp-franquia" lp={LP} />
+              <LeadFormNegocio identificador="formulario-lp-franquia-folheto" lp={LP} />
               <LinkWhatsApp
                 local="formulario"
                 lp={LP}
-                className="mt-4 flex items-center justify-center gap-2 text-sm font-bold text-[#9b1b16] hover:underline"
+                className="mt-4 flex items-center justify-center gap-2 text-sm font-bold text-[#7a1622] hover:underline"
               >
                 <img src={whatsappIcon} alt="" width={20} height={20} loading="lazy" />
                 Prefere conversar agora? Fale no WhatsApp
@@ -247,14 +308,17 @@ const Franquia = () => {
       </section>
 
       {/* ---------------- Mercado & oportunidade ---------------- */}
-      <section className="py-12 md:py-20 text-white" style={{ backgroundColor: VERMELHO }}>
+      <section className="py-12 md:py-20 text-white" style={{ backgroundColor: BORDO }}>
         <div className="container mx-auto px-5 max-w-6xl grid lg:grid-cols-[0.9fr_1.1fr] gap-10 items-center">
           <div>
             <p className="font-serif text-secondary text-2xl md:text-3xl">Mercado &amp; oportunidade para você</p>
-            <h2 className="font-display italic uppercase text-secondary text-5xl md:text-7xl leading-[1] mt-3">Pizza vende todos os dias.</h2>
+            <h2 className="font-display italic uppercase text-white text-5xl md:text-7xl leading-[1] mt-3">
+              Pizza vende <span className="text-secondary">todos os dias.</span>
+            </h2>
             <p className="mt-4 text-white/85 text-base md:text-lg leading-relaxed">
               Um mercado grande, recorrente e sem sazonalidade: ideal para quem quer segurança e previsibilidade.
             </p>
+            <p className="mt-3 font-display text-secondary text-2xl tracking-wide">#segurança #previsível</p>
             <div className="mt-6 border-y border-secondary/60 py-4 text-lg md:text-xl leading-relaxed">
               O mercado já está comprovado. Com o suporte da Pizza Prime, entrar é a parte fácil.
             </div>
@@ -274,7 +338,7 @@ const Franquia = () => {
       {/* ---------------- Para quem é ---------------- */}
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-5 max-w-6xl grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
-          <div className="rounded-3xl p-6 md:p-10 text-white" style={{ backgroundColor: VERMELHO }}>
+          <div className="rounded-3xl p-6 md:p-10 text-white shadow-xl" style={{ backgroundColor: BORDO }}>
             <h2 className="font-display uppercase text-4xl md:text-5xl leading-[1.05] mb-7">Para quem é a Pizza Prime?</h2>
             <ul className="space-y-7">
               {PARA_QUEM.map(({ icone: Icone, rotulo, titulo, texto }) => (
@@ -292,15 +356,16 @@ const Franquia = () => {
             </ul>
           </div>
           <div>
-            <h3 className="font-display uppercase text-3xl md:text-4xl text-[#9b1b16] leading-tight">Quem abriu uma Pizza Prime em 2026</h3>
-            <p className="mt-3 text-[#3a3a3a] leading-relaxed">
+            <Traco />
+            <h3 className="font-display uppercase text-3xl md:text-4xl text-[#7a1622] leading-tight">Quem abriu uma Pizza Prime em 2026</h3>
+            <p className="mt-3 text-[#333] leading-relaxed">
               12 das 13 unidades abertas em 2026 têm um sócio que é ou já foi empresário. Muitos mantêm a carreira e abrem a
               Pizza Prime como segunda operação, com um sócio cuidando do dia a dia.
             </p>
             <ul className="mt-5 flex flex-wrap gap-2">
               {PERFIS.map((p) => (
-                <li key={p} className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full bg-white border border-[#9b1b16]/20">
-                  <Check className="w-4 h-4 text-[#9b1b16]" aria-hidden="true" />
+                <li key={p} className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full bg-white/90 border border-[#7a1622]/20">
+                  <Check className="w-4 h-4 text-[#7a1622]" aria-hidden="true" />
                   {p}
                 </li>
               ))}
@@ -312,7 +377,7 @@ const Franquia = () => {
               height={600}
               loading="lazy"
               decoding="async"
-              className="mt-6 rounded-2xl w-full object-cover hidden md:block"
+              className="mt-6 rounded-2xl w-full object-cover hidden md:block shadow-lg"
             />
           </div>
         </div>
@@ -321,14 +386,14 @@ const Franquia = () => {
       {/* ---------------- Operação descomplicada ---------------- */}
       <section className="pb-12 md:pb-20">
         <div className="container mx-auto px-5 max-w-5xl">
-          <div className="rounded-3xl bg-white border border-[#9b1b16]/15 p-6 md:p-10">
-            <h2 className="font-display uppercase text-[#9b1b16] text-4xl md:text-5xl leading-[1.05]">Operação descomplicada</h2>
-            <p className="font-serif italic text-2xl md:text-3xl text-[#9b1b16] mt-1">Empreenda sem medo.</p>
-            <dl className="mt-6 divide-y divide-[#9b1b16]/15">
+          <div className="rounded-3xl bg-white/90 p-6 md:p-10 shadow-lg">
+            <h2 className="font-display uppercase text-[#7a1622] text-4xl md:text-5xl leading-[1.05]">Operação descomplicada</h2>
+            <p className="font-serif italic text-2xl md:text-3xl text-[#7a1622] mt-1">Empreenda sem medo.</p>
+            <dl className="mt-6 divide-y divide-[#7a1622]/15">
               {SEM_MEDO.map((s) => (
                 <div key={s.medo} className="grid sm:grid-cols-[1fr_1.4fr] gap-1 sm:gap-6 py-4">
-                  <dt className="font-serif italic font-bold text-lg md:text-xl text-[#9b1b16]">"{s.medo}"</dt>
-                  <dd className="text-[#3a3a3a] md:text-lg leading-relaxed">{s.resposta}</dd>
+                  <dt className="font-serif italic font-bold text-lg md:text-xl text-[#7a1622]">"{s.medo}"</dt>
+                  <dd className="text-[#333] md:text-lg leading-relaxed">{s.resposta}</dd>
                 </div>
               ))}
             </dl>
@@ -336,41 +401,29 @@ const Franquia = () => {
         </div>
       </section>
 
-      {/* ---------------- Ecossistema Prime ---------------- */}
-      <section className="py-12 md:py-20 bg-white">
+      {/* ---------------- Ecossistema ---------------- */}
+      <section className="py-12 md:py-20" style={CIMENTO_CLARO}>
         <div className="container mx-auto px-5 max-w-6xl">
-          <div className="mb-8 md:mb-10 text-center">
-            <h2 className="font-display uppercase text-[#9b1b16] text-5xl md:text-7xl leading-[1]">Ecossistema Prime</h2>
-            <p className="mt-3 text-lg md:text-xl text-[#555]">
-              Tudo o que a sua loja precisa para crescer e vender mais. <em className="font-bold text-[#3a3a3a]">Você começa na frente.</em>
-            </p>
+          <div className="mb-8 md:mb-6 max-w-3xl mx-auto text-center">
+            <p className="font-display uppercase text-2xl md:text-3xl text-[#3a3a3a]">Mais que pizzas,</p>
+            <h2 className="font-display uppercase text-[#7a1622] text-4xl md:text-6xl leading-[1.05]">um ecossistema completo para o seu negócio.</h2>
+            <p className="mt-3 text-lg text-[#444]">Você começa na frente.</p>
           </div>
-          <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            {ECOSSISTEMA.map(({ icone: Icone, titulo, texto }) => (
-              <li key={titulo} className="rounded-2xl bg-[#fbf3e3] border border-[#9b1b16]/15 p-5 flex gap-4 lg:block">
-                <span className="w-12 h-12 rounded-full bg-[#9b1b16]/10 flex items-center justify-center shrink-0 lg:mb-3">
-                  <Icone className="w-6 h-6 text-[#9b1b16]" aria-hidden="true" />
-                </span>
-                <div>
-                  <h3 className="font-display uppercase text-xl text-[#9b1b16] leading-tight">{titulo}</h3>
-                  <p className="text-sm text-[#555] mt-1 leading-relaxed">{texto}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <RodaEcossistema />
         </div>
       </section>
 
       {/* ---------------- Números da rede ---------------- */}
-      <section className="py-12 md:py-20" style={{ backgroundColor: LARANJA }}>
+      <section className="py-12 md:py-20 text-white" style={{ backgroundColor: BORDO }}>
         <div className="container mx-auto px-5 max-w-6xl">
-          <h2 className="font-display uppercase text-4xl md:text-6xl leading-[1.05] text-[#9b1b16] mb-8 md:mb-10 max-w-4xl">
+          <p className="font-display uppercase tracking-[0.15em] text-secondary text-sm md:text-base">Uma das maiores redes de pizzarias do Brasil · #PrimeEmTodoLugar</p>
+          <h2 className="font-display uppercase text-4xl md:text-6xl leading-[1.05] mt-3 mb-8 md:mb-10 max-w-4xl">
             Você entra em uma rede com modelo testado e validado
           </h2>
           <dl className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {NUMEROS.map((n) => (
-              <div key={n.texto} className="rounded-2xl bg-white/95 p-5 md:p-6">
-                <dd className="font-display text-4xl md:text-6xl text-[#9b1b16] leading-none">
+              <div key={n.texto} className="rounded-2xl bg-white p-5 md:p-6">
+                <dd className="font-display text-4xl md:text-6xl text-[#7a1622] leading-none">
                   {n.valor}
                   {n.estimativa && <sup className="text-base">¹</sup>}
                 </dd>
@@ -380,36 +433,65 @@ const Franquia = () => {
           </dl>
 
           <div className="mt-8 grid md:grid-cols-3 gap-3 md:gap-4">
-            <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: VERMELHO }}>
+            <div className="rounded-2xl p-5 border-2 border-secondary" style={{ backgroundColor: BORDO_ESCURO }}>
               <p className="text-xs font-bold uppercase tracking-wider text-secondary">Delivery · foco da expansão</p>
               <p className="font-display text-4xl mt-1">R$ 249 mil</p>
               <p className="text-sm text-white/85">+ R$ 50 mil de capital de giro e estoque. Até 60 m², delivery e retirada.</p>
             </div>
-            <div className="rounded-2xl bg-white/95 p-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-[#9b1b16]">Smart Delivery</p>
-              <p className="font-display text-4xl mt-1 text-[#2b2b2b]">R$ 199 mil*</p>
-              <p className="text-sm text-[#555]">*Para cidades até 50 mil habitantes.</p>
+            <div className="rounded-2xl bg-white/10 p-5">
+              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Smart Delivery</p>
+              <p className="font-display text-4xl mt-1">R$ 199 mil*</p>
+              <p className="text-sm text-white/80">*Para cidades até 50 mil habitantes.</p>
             </div>
-            <div className="rounded-2xl bg-white/95 p-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-[#9b1b16]">Express Delivery</p>
-              <p className="font-display text-4xl mt-1 text-[#2b2b2b]">R$ 369 mil</p>
-              <p className="text-sm text-[#555]">Delivery, retirada, salão para até 29 lugares e rodízio.</p>
+            <div className="rounded-2xl bg-white/10 p-5">
+              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Express Delivery</p>
+              <p className="font-display text-4xl mt-1">R$ 369 mil</p>
+              <p className="text-sm text-white/80">Delivery, retirada, salão para até 29 lugares e rodízio.</p>
             </div>
           </div>
-          <p className="mt-4 text-xs text-[#5a0f0a] leading-relaxed">¹ {AVISO}</p>
+          <p className="mt-4 text-xs text-white/65 leading-relaxed">¹ {AVISO}</p>
+        </div>
+      </section>
+
+      {/* ---------------- 3 motivos para investir ---------------- */}
+      <section className="py-12 md:py-20">
+        <div className="container mx-auto px-5 max-w-6xl">
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-8 md:mb-12">
+            <div>
+              <Traco />
+              <p className="font-display uppercase text-3xl md:text-5xl text-[#3a3a3a] leading-none">3 motivos</p>
+              <h2 className="font-display uppercase text-5xl md:text-7xl text-[#7a1622] leading-none">para investir</h2>
+            </div>
+            <p className="font-display text-[#7a1622] text-3xl md:text-5xl leading-[0.95] -rotate-3 [text-shadow:0_2px_0_#fff]">#TodoMundoÉPrime</p>
+          </div>
+          <ul className="grid md:grid-cols-3 md:divide-x-4 divide-[#7a1622] gap-8 md:gap-0">
+            {MOTIVOS.map(({ icone: Icone, titulo, texto }) => (
+              <li key={titulo} className="text-center md:px-8">
+                <span className="w-20 h-20 rounded-full mx-auto flex items-center justify-center shadow-lg" style={{ backgroundColor: BORDO }}>
+                  <Icone className="w-9 h-9 text-secondary" aria-hidden="true" />
+                </span>
+                <h3 className="font-display uppercase text-3xl text-[#2b2b2b] mt-4 leading-tight">{titulo}</h3>
+                <p className="text-[#444] text-lg mt-2 leading-snug">{texto}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 text-center">
+            <BotaoPrincipal className="w-full sm:w-auto">Quero conversar com a expansão</BotaoPrincipal>
+          </div>
         </div>
       </section>
 
       {/* ---------------- Depoimentos ---------------- */}
-      <section className="py-12 md:py-20 bg-white">
+      <section className="py-12 md:py-20 bg-white/90">
         <div className="container mx-auto px-5 max-w-6xl">
-          <h2 className="font-display uppercase text-[#9b1b16] text-4xl md:text-6xl leading-[1.05] mb-8 md:mb-10">O que falam nossos franqueados</h2>
+          <Traco />
+          <h2 className="font-display uppercase text-[#7a1622] text-4xl md:text-6xl leading-[1.05] mb-8 md:mb-10">O que falam nossos franqueados</h2>
           <div className="grid md:grid-cols-2 gap-5 mb-10">
             {DEPOIMENTOS.map((d) => (
               <blockquote key={d.nome} className="m-0 border-l-4 border-secondary pl-5">
                 <p className="text-lg md:text-xl text-[#2b2b2b] leading-relaxed">"{d.texto}"</p>
                 <footer className="mt-3">
-                  <span className="block font-bold text-[#9b1b16]">
+                  <span className="block font-bold text-[#7a1622]">
                     {d.nome} · {d.local}
                   </span>
                   <span className="block text-sm text-[#777]">Franqueado</span>
@@ -430,9 +512,9 @@ const Franquia = () => {
       {/* ---------------- Parceiros e selos ---------------- */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-5 max-w-5xl text-center">
-          <p className="font-display uppercase text-2xl md:text-3xl text-[#777] mb-6">Parceiros oficiais</p>
-          <img src={parceiros} alt="Parceiros oficiais: Guaraná Antarctica, Azul, Sadia, Perdigão, Tirolez, iFood, 99Food, Saipos, DCX Embalagens e Leprino" width={1100} height={466} loading="lazy" decoding="async" className="mx-auto w-full max-w-3xl" />
-          <p className="font-display uppercase text-2xl md:text-3xl text-[#777] mt-12 mb-6">Excelência em franquia</p>
+          <p className="font-display uppercase text-2xl md:text-3xl text-[#555] mb-6">Parceiros oficiais</p>
+          <img src={parceiros} alt="Parceiros oficiais: Guaraná Antarctica, Azul, Sadia, Perdigão, Tirolez, iFood, 99Food, Saipos, DCX Embalagens e Leprino" width={1100} height={466} loading="lazy" decoding="async" className="mx-auto w-full max-w-3xl rounded-2xl bg-white/90 p-4" />
+          <p className="font-display uppercase text-2xl md:text-3xl text-[#555] mt-12 mb-6">Excelência em franquia</p>
           <ul className="flex flex-wrap justify-center items-center gap-x-4 gap-y-4" aria-label="Prêmios e certificações">
             {SELOS.map((s) => (
               <li key={s.alt}>
@@ -446,11 +528,12 @@ const Franquia = () => {
       {/* ---------------- CTA final ---------------- */}
       <section className="pb-14 md:pb-20">
         <div className="container mx-auto px-5 max-w-4xl">
-          <div className="rounded-3xl p-8 md:p-12 text-center text-white" style={{ backgroundColor: VERMELHO }}>
+          <div className="rounded-3xl p-8 md:p-12 text-center text-white shadow-2xl border-b-4 border-secondary" style={{ backgroundColor: BORDO }}>
             <p className="font-serif italic text-white/85 text-lg md:text-xl">Comece na frente em um mercado que não para.</p>
             <p className="font-display uppercase text-secondary text-4xl md:text-6xl leading-[1.05] mt-2">Seu próximo grande negócio começa aqui</p>
             <p className="text-white/80 mt-4 mb-6">Fale com o time de expansão e veja o modelo ideal para a sua cidade.</p>
             <BotaoPrincipal className="w-full sm:w-auto">Quero conversar com a expansão</BotaoPrincipal>
+            <p className="mt-6 font-display text-white/90 text-2xl">#TodoMundoÉPrime</p>
           </div>
         </div>
       </section>
@@ -459,7 +542,7 @@ const Franquia = () => {
 
       {/* ---------------- Celular: barra fixa ---------------- */}
       <div
-        className={`md:hidden fixed inset-x-0 bottom-0 z-50 p-3 bg-[#9b1b16]/95 backdrop-blur border-t border-white/10 flex gap-2 transition-transform duration-300 ${
+        className={`md:hidden fixed inset-x-0 bottom-0 z-50 p-3 bg-[#7a1622]/95 backdrop-blur border-t border-white/10 flex gap-2 transition-transform duration-300 ${
           barraVisivel ? "translate-y-0" : "translate-y-full"
         }`}
         aria-hidden={!barraVisivel}

@@ -104,7 +104,9 @@ export async function POST(req: Request) {
 const CONVERSOES_RD: Record<string, string> = {
   "formulario-lp-negocio": "lp-negocio-pizza-prime",
   "formulario-lp-oportunidade": "lp-oportunidade-pizza-prime",
-  "formulario-lp-franquia": "lp-franquia-pizza-prime",
+  // A /franquia tem id próprio: "formulario-lp-franquia" é o da LP principal, que já
+  // chega ao RD pelo fluxo atual e não pode entrar aqui (lead em dobro).
+  "formulario-lp-franquia-folheto": "lp-franquia-pizza-prime",
 };
 
 const tag = (texto: string) =>

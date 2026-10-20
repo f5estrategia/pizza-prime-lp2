@@ -294,7 +294,7 @@ const Oportunidade = () => {
             <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <p className="font-display uppercase text-white text-xl sm:text-2xl md:text-3xl tracking-wide">
-                  A maior rede brasileira de pizzarias
+                  Uma das maiores redes de pizzarias do Brasil
                 </p>
                 <h1 className="font-display uppercase text-secondary text-[2.6rem] sm:text-6xl lg:text-[4.2rem] leading-[1.15] sm:leading-[1.15] lg:leading-[1.15] mt-3">
                   Quanto uma pizzaria deixa na mesa todo mês?
