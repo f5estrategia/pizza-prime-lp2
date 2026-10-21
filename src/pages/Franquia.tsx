@@ -241,12 +241,12 @@ const Franquia = () => {
           <img src={logo} alt="Pizza Prime" width={112} height={112} className="w-20 md:w-28" />
 
           <div className="grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-12 items-start mt-8 md:mt-10">
-            <div className="grid md:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-8 items-start">
+            <div className="grid md:grid-cols-[1fr_280px] lg:grid-cols-1 xl:grid-cols-[1fr_320px] gap-8 items-start">
               <div>
-                <h1 className="max-w-2xl font-serif italic font-bold text-[#7a1622] text-[2.3rem] sm:text-5xl lg:text-[3.1rem] xl:text-[3.4rem] leading-[1.12]">
+                <h1 className="max-w-2xl font-display uppercase text-[#7a1622] text-[2.6rem] sm:text-6xl lg:text-[3.6rem] xl:text-[4rem] leading-[1.05] sm:leading-[1.05] lg:leading-[1.05]">
                   Enquanto você lê isso, uma pizza está sendo vendida em algum lugar do Brasil.
                 </h1>
-                <p className="mt-6 max-w-xl border-l-4 border-secondary pl-4 font-display uppercase text-[#2b2b2b] text-3xl md:text-4xl lg:text-[1.85rem] xl:text-[2rem] leading-[1.05]">
+                <p className="mt-6 max-w-xl border-l-4 border-secondary pl-4 font-serif italic font-bold text-[#7a1622] text-2xl md:text-[2rem] leading-snug">
                   Seu próximo grande negócio começa aqui
                 </p>
                 <p className="mt-4 text-base md:text-lg leading-relaxed text-[#333] max-w-xl">
