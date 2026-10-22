@@ -1,82 +1,96 @@
-import { motion } from "framer-motion";
 import logo from "@/assets/logo-pizza-prime.webp";
-import heroBg from "@/assets/pizza-prime-300.webp";
-import WhatsAppButton from "./WhatsAppButton";
+import franqueados960 from "@/assets/hero-franqueados-960.webp";
+import franqueados560 from "@/assets/hero-franqueados-560.webp";
+import MultiStepFranchiseForm from "./MultiStepFranchiseForm";
 
-const stats = [
-{ value: "100+", label: "Unidades no Brasil e América Latina" },
-{ value: "11", label: "Estados brasileiros" },
-{ value: "R$ 3MM", label: "Faturamento médio anual/loja" },
-{ value: "Desde 2020", label: "No mercado" }];
+// Dobra 1 (out/2026): falar com o ICP (empresário que diversifica, profissional de alta
+// renda) logo de cara. Headline aprovada na /negocio, investimento completo, prova da
+// rede e o formulário já no topo (antes ele ficava depois dos depoimentos). Foto de
+// franqueados reais no lugar da pizza: o assunto é o negócio, não o produto.
+// Sem superlativo sem fonte e sem número de faturamento: é a página do anúncio do Google.
+const provas = [
+  { value: "+100", label: "unidades" },
+  { value: "11", label: "estados + Paraguai" },
+  { value: "3", label: "unidades em média por franqueado" },
+  { value: "15 anos", label: "de marca, desde 2011" },
+];
 
-
-const HeroSection = () => {
-  const scrollToForm = () => {
-    document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  return (
-    <section className="relative min-h-[min(100vh,56rem)] flex items-center overflow-hidden bg-brand-dark">
-      <div className="absolute inset-0">
-        <img src={heroBg} alt="Pizza Prime" className="w-full h-full object-cover object-[70%_center] md:object-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0E0E0E]/80 via-[#0E0E0E]/60 to-[#0E0E0E]/30" />
+const HeroSection = () => (
+  <section className="relative overflow-hidden bg-[#0E0E0E] text-white">
+    <div
+      aria-hidden="true"
+      className="absolute inset-0"
+      style={{ background: "radial-gradient(ellipse 60% 70% at 15% 0%, rgba(134,27,21,.55), transparent 70%)" }}
+    />
+    <div className="relative container mx-auto px-4 pt-6 pb-14 lg:pt-8 lg:pb-20">
+      <div className="flex items-center justify-between gap-4">
+        <img src={logo} alt="Pizza Prime" width={96} height={96} className="w-20 lg:w-24" />
+        <p className="text-right text-xs md:text-sm font-bold uppercase tracking-[0.18em] text-white/70">
+          Franquia<span className="hidden sm:inline"> · uma das maiores redes brasileiras de pizzarias</span>
+        </p>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-20 lg:py-32 pb-72 lg:pb-48">
-        <div className="max-w-4xl">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <img src={logo} alt="Pizza Prime" className="w-32 lg:w-40 mb-6" />
-          </motion.div>
+      <div className="grid lg:grid-cols-[1fr_420px] gap-10 lg:gap-14 items-start mt-8 lg:mt-12">
+        <div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.08]">
+            Um modelo validado para quem <span className="text-secondary">já pensa em investir</span>
+          </h1>
+          <p className="mt-5 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
+            Operação padronizada, cozinha central e suporte da escolha do ponto à inauguração. Você conduz o negócio por
+            processos e indicadores, sem precisar saber fazer pizza.
+          </p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-4xl md:text-5xl font-extrabold leading-tight mb-6 text-white lg:text-6xl">
-
-            Invista em uma das{" "}
-            <span className="text-gradient-gold bg-secondary">maiores redes brasileiras</span>{" "}
-            de pizzarias, com um modelo de negócio já estruturado.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl text-white/90 mb-6 max-w-3xl leading-relaxed font-extralight md:text-lg">
-
-            Modelo testado em +100 unidades, suporte completo e
-marca reconhecida nacionalmente.   
-
-          </motion.p>
-
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-secondary font-bold text-2xl mb-6">
-            Modelo Delivery: investimento a partir de R$ 249 mil.
-          </motion.p>
-
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.7 }}>
-            <WhatsAppButton onClick={scrollToForm}>Quero ser dono de uma franquia</WhatsAppButton>
-          </motion.div>
-        </div>
-      </div>
-
-      <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.9, duration: 0.6 }}
-      className="absolute bottom-0 left-0 right-0 bg-brand-yellow">
-
-        <div className="container mx-auto px-4 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat, i) =>
-            <div key={i}>
-                <div className="text-3xl md:text-5xl font-extrabold text-[#0E0E0E]">{stat.value}</div>
-                <div className="text-sm md:text-base text-[#0E0E0E]/80 mt-1 font-medium">{stat.label}</div>
-              </div>
-            )}
+          <div className="mt-7 inline-block rounded-2xl border-2 border-secondary bg-[#861B15] px-6 py-4">
+            <p className="text-xs md:text-sm font-extrabold uppercase tracking-[0.18em] text-secondary">Investimento no modelo Delivery</p>
+            <p className="text-5xl md:text-6xl font-extrabold leading-none mt-1">R$ 249 mil</p>
+            <p className="text-white/85 text-sm md:text-base font-bold mt-2">+ R$ 50 mil de capital de giro e estoque</p>
           </div>
-        </div>
-      </motion.div>
-    </section>);
 
-};
+          <dl className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5 max-w-2xl">
+            {provas.map((p) => (
+              <div key={p.label} className="border-l-2 border-secondary pl-3">
+                <dd className="text-3xl md:text-4xl font-extrabold leading-none">{p.value}</dd>
+                <dt className="text-xs md:text-sm text-white/70 mt-1 leading-snug">{p.label}</dt>
+              </div>
+            ))}
+          </dl>
+
+          <figure className="mt-10 hidden lg:block max-w-2xl">
+            <img
+              src={franqueados960}
+              srcSet={`${franqueados560} 560w, ${franqueados960} 960w`}
+              sizes="(min-width: 1024px) 640px, 100vw"
+              alt="Franqueados na inauguração da unidade Pizza Prime de Pouso Alegre (MG)"
+              width={960}
+              height={880}
+              className="w-full h-72 object-cover object-[50%_88%] rounded-2xl shadow-2xl"
+              {...{ fetchpriority: "high" }}
+            />
+            <figcaption className="mt-2 text-xs text-white/55">Franqueados na inauguração da unidade de Pouso Alegre (MG).</figcaption>
+          </figure>
+        </div>
+
+        <div id="formulario" className="scroll-mt-4">
+          <p className="text-center text-sm font-bold uppercase tracking-wider text-secondary mb-3">Fale com o time de expansão</p>
+          <MultiStepFranchiseForm />
+        </div>
+
+        <figure className="lg:hidden">
+          <img
+            src={franqueados560}
+            srcSet={`${franqueados560} 560w, ${franqueados960} 960w`}
+            sizes="100vw"
+            alt="Franqueados na inauguração da unidade Pizza Prime de Pouso Alegre (MG)"
+            width={560}
+            height={513}
+            loading="lazy"
+            className="w-full h-64 object-cover object-[50%_88%] rounded-2xl"
+          />
+          <figcaption className="mt-2 text-xs text-white/55">Franqueados na inauguração da unidade de Pouso Alegre (MG).</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+);
 
 export default HeroSection;

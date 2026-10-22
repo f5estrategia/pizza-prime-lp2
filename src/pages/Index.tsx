@@ -11,7 +11,8 @@ import FounderSection from "@/components/FounderSection";
 import SocialProofSection from "@/components/SocialProofSection";
 import FAQSection from "@/components/FAQSection";
 import StepsSection from "@/components/StepsSection";
-import CTAFormSection from "@/components/CTAFormSection";
+import ProfileSection from "@/components/ProfileSection";
+import ReasonsSection from "@/components/ReasonsSection";
 import Footer from "@/components/Footer";
 import { useEffect } from "react";
 
@@ -29,20 +30,22 @@ const Index = () => {
     <HeroSection />
     {/* Dobra 2 - Case de Sucesso */}
     <TestimonialsSection />
-    {/* Dobra - CTA Formulário */}
-    <CTAFormSection />
     {/* Barra de Prova Social */}
     <SocialProofBar />
     {/* Dobra 3 - Dor */}
     <PainSection />
     {/* Dobra 4 - Solução */}
     <SolutionSection />
+    {/* Para quem é + operação descomplicada */}
+    <ProfileSection />
     {/* Dobra 5 - Modelos */}
     <FranchiseModels />
     {/* Dobra 6 - Números */}
     <MarketNumbers />
     {/* Dobra 7 - Diferenciais */}
     <DifferentialsSection />
+    {/* 3 motivos para investir */}
+    <ReasonsSection />
     {/* Dobra 8 - Parceiros + Mídia */}
     <PartnersMediaSection />
     {/* Dobra 9 - Fundador */}
