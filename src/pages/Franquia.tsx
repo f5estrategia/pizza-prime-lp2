@@ -339,7 +339,7 @@ const Franquia = () => {
 
       {/* ---------------- Para quem é ---------------- */}
       <section className="py-12 md:py-20">
-        <div className="container mx-auto px-5 max-w-6xl grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+        <div className="container mx-auto px-5 max-w-6xl grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
           <div className="rounded-3xl p-6 md:p-10 text-white shadow-xl" style={{ backgroundColor: BORDO }}>
             <h2 className="font-display uppercase text-4xl md:text-5xl leading-[1.05] mb-7">Para quem é a Pizza Prime?</h2>
             <ul className="space-y-7">
