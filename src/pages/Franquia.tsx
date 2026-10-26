@@ -95,12 +95,12 @@ const ECOSSISTEMA = [
 ];
 
 const PARA_QUEM = [
-  { icone: Rocket, rotulo: "Primeiro negócio", titulo: "Para quem sempre quis empreender", texto: "e busca segurança para dar o primeiro passo, com suporte completo do primeiro passo em diante, sem precisar de experiência no setor de alimentação." },
-  { icone: ChartNoAxesCombined, rotulo: "Diversificação de investimentos", titulo: "Para quem já empreende em outra área e quer diversificar", texto: "com um negócio físico, previsível, com operação padronizada e uma rede que já provou que funciona." },
-  { icone: ClipboardCheck, rotulo: "Negócio gerenciável", titulo: "Para quem quer um negócio conduzido por processos", texto: "e indicadores, sem depender do know-how pessoal de cozinha." },
+  { icone: Rocket, rotulo: "Primeiro negócio", titulo: "Para quem sempre quis empreender" },
+  { icone: ChartNoAxesCombined, rotulo: "Diversificação de investimentos", titulo: "Para quem já empreende em outra área e quer diversificar" },
+  { icone: ClipboardCheck, rotulo: "Negócio gerenciável", titulo: "Para quem quer um negócio conduzido por processos" },
 ];
 
-const PERFIS = ["Médico cardiologista", "Banker e esposa", "Empresários de estética", "Pai e filho", "Administrador de grupo empresarial"];
+const PERFIS = ["Médico cardiologista", "Casal de investidores", "Executivos do mercado financeiro", "Empresários de estética", "Pai e filho", "Administrador de grupo empresarial"];
 
 const NUMEROS = [
   { valor: "+100", texto: "unidades em 11 estados e no Paraguai" },
@@ -343,16 +343,13 @@ const Franquia = () => {
           <div className="rounded-3xl p-6 md:p-10 text-white shadow-xl" style={{ backgroundColor: BORDO }}>
             <h2 className="font-display uppercase text-4xl md:text-5xl leading-[1.05] mb-7">Para quem é a Pizza Prime?</h2>
             <ul className="space-y-7">
-              {PARA_QUEM.map(({ icone: Icone, rotulo, titulo, texto }) => (
-                <li key={titulo} className="flex gap-4">
+              {PARA_QUEM.map(({ icone: Icone, rotulo, titulo }) => (
+                <li key={titulo} className="flex items-center gap-4">
                   <div className="w-24 shrink-0 text-center">
                     <Icone className="w-10 h-10 text-secondary mx-auto" aria-hidden="true" />
                     <p className="mt-1 text-[9px] font-extrabold uppercase italic text-white/80 leading-tight">{rotulo}</p>
                   </div>
-                  <div>
-                    <h3 className="font-display uppercase text-xl md:text-2xl text-white leading-tight">...{titulo}</h3>
-                    <p className="text-white/85 text-sm md:text-base mt-1 leading-relaxed">{texto}</p>
-                  </div>
+                  <h3 className="font-display uppercase text-xl md:text-2xl text-white leading-tight">...{titulo}</h3>
                 </li>
               ))}
             </ul>

@@ -102,7 +102,7 @@ const PARA_QUEM = [
   { icone: Sparkles, titulo: "Nova unidade", texto: "Para quem quer abrir o próprio negócio, mesmo sem experiência no setor, com o suporte de uma marca consolidada." },
 ];
 
-const PERFIS = ["Médico cardiologista", "Banker e esposa", "Empresários de estética", "Pai e filho", "Administrador de grupo empresarial", "Veteranos do food service"];
+const PERFIS = ["Médico cardiologista", "Casal de investidores", "Executivos do mercado financeiro", "Empresários de estética", "Pai e filho", "Administrador de grupo empresarial", "Veteranos do food service"];
 
 const DEPOIMENTOS = [
   { nome: "Matheus Borguetti", local: "Bertioga (SP)", perfil: "Dono de restaurante e franqueado", texto: "O suporte foi tão bom que me deu segurança pra pensar em outra loja. Mesmo sem experiência no ramo, dá pra operar uma Pizza Prime com segurança." },
