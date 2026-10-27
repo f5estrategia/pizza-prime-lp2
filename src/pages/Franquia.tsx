@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   Award, TrendingUp, ChefHat, Headset, GraduationCap, Workflow, Megaphone, MonitorSmartphone,
-  Rocket, ChartNoAxesCombined, ClipboardCheck, Check, CircleCheck, Star, Split,
+  Rocket, ChartNoAxesCombined, ClipboardCheck, Check, CircleCheck,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import LeadFormNegocio from "@/components/LeadFormNegocio";
@@ -109,12 +109,6 @@ const NUMEROS = [
   { valor: "R$ 3 mi", texto: "de faturamento médio por loja ao ano", estimativa: true },
   { valor: "12-16%", texto: "de lucratividade média", estimativa: true },
   { valor: "18-24", texto: "meses de payback estimado no modelo Delivery", estimativa: true },
-];
-
-const MOTIVOS = [
-  { icone: ClipboardCheck, titulo: "Modelo validado", texto: "+100 unidades pelo Brasil e no Paraguai." },
-  { icone: Star, titulo: "Força de marca", texto: "Reconhecimento e alta demanda em todas as regiões." },
-  { icone: Split, titulo: "Vantagem operacional", texto: "Acesso a territórios exclusivos em cidades-chave." },
 ];
 
 const DEPOIMENTOS = [
@@ -249,11 +243,7 @@ const Franquia = () => {
                 <p className="mt-6 max-w-xl border-l-4 border-secondary pl-4 font-serif italic font-bold text-[#7a1622] text-2xl md:text-[2rem] leading-snug">
                   Seu próximo grande negócio começa aqui
                 </p>
-                <p className="mt-4 text-base md:text-lg leading-relaxed text-[#333] max-w-xl">
-                  Mais que pizzas: <strong>um ecossistema completo para o seu negócio</strong>, em um mercado que não para e com
-                  o suporte de uma rede que já provou que funciona.
-                </p>
-                <ul className="mt-5 space-y-2">
+                <ul className="mt-6 space-y-2">
                   {["Sem sazonalidade", "Com segurança", "E previsibilidade"].map((t) => (
                     <li key={t} className="flex items-center gap-2 font-bold text-[#7a1622] text-lg">
                       <CircleCheck className="w-5 h-5 shrink-0" aria-hidden="true" />
@@ -337,6 +327,61 @@ const Franquia = () => {
         </div>
       </section>
 
+      {/* ---------------- Números da rede ---------------- */}
+      <section className="py-12 md:py-20 text-white" style={{ backgroundColor: BORDO_ESCURO }}>
+        <div className="container mx-auto px-5 max-w-6xl">
+          <p className="font-display uppercase tracking-[0.15em] text-secondary text-sm md:text-base">Uma das maiores redes de pizzarias do Brasil · #PrimeEmTodoLugar</p>
+          <h2 className="font-display uppercase text-4xl md:text-6xl leading-[1.05] mt-3 mb-8 md:mb-10 max-w-4xl">
+            Você entra em uma rede com modelo testado e validado
+          </h2>
+          <dl className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {NUMEROS.map((n) => (
+              <div key={n.texto} className="rounded-2xl bg-white p-5 md:p-6">
+                <dd className="font-display text-4xl md:text-6xl text-[#7a1622] leading-none">
+                  {n.valor}
+                  {n.estimativa && <sup className="text-base">¹</sup>}
+                </dd>
+                <dt className="text-sm md:text-base text-[#444] mt-2 leading-snug">{n.texto}</dt>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-8 grid md:grid-cols-3 gap-3 md:gap-4">
+            <div className="rounded-2xl p-5 border-2 border-secondary" style={{ backgroundColor: BORDO }}>
+              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Delivery · foco da expansão</p>
+              <p className="font-display text-4xl mt-1">R$ 249 mil</p>
+              <p className="text-sm text-white/85">+ R$ 50 mil de capital de giro e estoque. Até 60 m², delivery e retirada.</p>
+            </div>
+            <div className="rounded-2xl bg-white/10 p-5">
+              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Smart Delivery</p>
+              <p className="font-display text-4xl mt-1">R$ 199 mil*</p>
+              <p className="text-sm text-white/80">*Para cidades até 50 mil habitantes.</p>
+            </div>
+            <div className="rounded-2xl bg-white/10 p-5">
+              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Express Delivery</p>
+              <p className="font-display text-4xl mt-1">R$ 369 mil</p>
+              <p className="text-sm text-white/80">Delivery, retirada, salão para até 29 lugares e rodízio.</p>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-white/65 leading-relaxed">¹ {AVISO}</p>
+        </div>
+      </section>
+
+      {/* ---------------- Ecossistema ---------------- */}
+      <section className="py-12 md:py-20" style={CIMENTO_CLARO}>
+        <div className="container mx-auto px-5 max-w-6xl">
+          <div className="mb-8 md:mb-6 max-w-3xl mx-auto text-center">
+            <p className="font-display uppercase text-2xl md:text-3xl text-[#3a3a3a]">Mais que pizzas,</p>
+            <h2 className="font-display uppercase text-[#7a1622] text-4xl md:text-6xl leading-[1.05]">um ecossistema completo para o seu negócio.</h2>
+            <p className="mt-3 text-lg text-[#444]">Você começa na frente.</p>
+          </div>
+          <RodaEcossistema />
+          <div className="mt-10 text-center">
+            <BotaoPrincipal className="w-full sm:w-auto">Quero conversar com a expansão</BotaoPrincipal>
+          </div>
+        </div>
+      </section>
+
       {/* ---------------- Para quem é ---------------- */}
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-5 max-w-6xl grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
@@ -396,86 +441,6 @@ const Franquia = () => {
                 </div>
               ))}
             </dl>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Ecossistema ---------------- */}
-      <section className="py-12 md:py-20" style={CIMENTO_CLARO}>
-        <div className="container mx-auto px-5 max-w-6xl">
-          <div className="mb-8 md:mb-6 max-w-3xl mx-auto text-center">
-            <p className="font-display uppercase text-2xl md:text-3xl text-[#3a3a3a]">Mais que pizzas,</p>
-            <h2 className="font-display uppercase text-[#7a1622] text-4xl md:text-6xl leading-[1.05]">um ecossistema completo para o seu negócio.</h2>
-            <p className="mt-3 text-lg text-[#444]">Você começa na frente.</p>
-          </div>
-          <RodaEcossistema />
-        </div>
-      </section>
-
-      {/* ---------------- Números da rede ---------------- */}
-      <section className="py-12 md:py-20 text-white" style={{ backgroundColor: BORDO }}>
-        <div className="container mx-auto px-5 max-w-6xl">
-          <p className="font-display uppercase tracking-[0.15em] text-secondary text-sm md:text-base">Uma das maiores redes de pizzarias do Brasil · #PrimeEmTodoLugar</p>
-          <h2 className="font-display uppercase text-4xl md:text-6xl leading-[1.05] mt-3 mb-8 md:mb-10 max-w-4xl">
-            Você entra em uma rede com modelo testado e validado
-          </h2>
-          <dl className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {NUMEROS.map((n) => (
-              <div key={n.texto} className="rounded-2xl bg-white p-5 md:p-6">
-                <dd className="font-display text-4xl md:text-6xl text-[#7a1622] leading-none">
-                  {n.valor}
-                  {n.estimativa && <sup className="text-base">¹</sup>}
-                </dd>
-                <dt className="text-sm md:text-base text-[#444] mt-2 leading-snug">{n.texto}</dt>
-              </div>
-            ))}
-          </dl>
-
-          <div className="mt-8 grid md:grid-cols-3 gap-3 md:gap-4">
-            <div className="rounded-2xl p-5 border-2 border-secondary" style={{ backgroundColor: BORDO_ESCURO }}>
-              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Delivery · foco da expansão</p>
-              <p className="font-display text-4xl mt-1">R$ 249 mil</p>
-              <p className="text-sm text-white/85">+ R$ 50 mil de capital de giro e estoque. Até 60 m², delivery e retirada.</p>
-            </div>
-            <div className="rounded-2xl bg-white/10 p-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Smart Delivery</p>
-              <p className="font-display text-4xl mt-1">R$ 199 mil*</p>
-              <p className="text-sm text-white/80">*Para cidades até 50 mil habitantes.</p>
-            </div>
-            <div className="rounded-2xl bg-white/10 p-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-secondary">Express Delivery</p>
-              <p className="font-display text-4xl mt-1">R$ 369 mil</p>
-              <p className="text-sm text-white/80">Delivery, retirada, salão para até 29 lugares e rodízio.</p>
-            </div>
-          </div>
-          <p className="mt-4 text-xs text-white/65 leading-relaxed">¹ {AVISO}</p>
-        </div>
-      </section>
-
-      {/* ---------------- 3 motivos para investir ---------------- */}
-      <section className="py-12 md:py-20">
-        <div className="container mx-auto px-5 max-w-6xl">
-          <div className="flex flex-wrap items-end justify-between gap-6 mb-8 md:mb-12">
-            <div>
-              <Traco />
-              <p className="font-display uppercase text-3xl md:text-5xl text-[#3a3a3a] leading-none">3 motivos</p>
-              <h2 className="font-display uppercase text-5xl md:text-7xl text-[#7a1622] leading-none">para investir</h2>
-            </div>
-            <p className="font-display text-[#7a1622] text-3xl md:text-5xl leading-[0.95] -rotate-3 [text-shadow:0_2px_0_#fff]">#TodoMundoÉPrime</p>
-          </div>
-          <ul className="grid md:grid-cols-3 md:divide-x-4 divide-[#7a1622] gap-8 md:gap-0">
-            {MOTIVOS.map(({ icone: Icone, titulo, texto }) => (
-              <li key={titulo} className="text-center md:px-8">
-                <span className="w-20 h-20 rounded-full mx-auto flex items-center justify-center shadow-lg" style={{ backgroundColor: BORDO }}>
-                  <Icone className="w-9 h-9 text-secondary" aria-hidden="true" />
-                </span>
-                <h3 className="font-display uppercase text-3xl text-[#2b2b2b] mt-4 leading-tight">{titulo}</h3>
-                <p className="text-[#444] text-lg mt-2 leading-snug">{texto}</p>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-10 text-center">
-            <BotaoPrincipal className="w-full sm:w-auto">Quero conversar com a expansão</BotaoPrincipal>
           </div>
         </div>
       </section>

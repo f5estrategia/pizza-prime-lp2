@@ -5,9 +5,9 @@ import { Phone, Mail, MapPin } from "lucide-react";
 const Footer = () => (
   <footer className="bg-brand-dark py-12">
     <div className="container mx-auto px-4">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="flex flex-col items-center gap-6 text-center">
         <img src={logo} alt="Pizza Prime" className="w-20" />
-        <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-white/70">
+        <div className="flex flex-col md:flex-row md:flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-white/70">
           <a href="tel:+5511988093216" className="flex items-center gap-2 hover:text-secondary transition-colors">
             <Phone className="w-4 h-4" /> (11) 98809-3216
           </a>
