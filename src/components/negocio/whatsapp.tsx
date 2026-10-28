@@ -2,11 +2,17 @@ import { useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import whatsappIcon from "@/assets/whatsapp-icon.webp";
 
-// Número da expansão (confirmado pelo Augusto em 09/10/2026). A mensagem própria
-// separa no WhatsApp quem veio desta LP do contato orgânico (pedido do Diego).
+// Número da expansão (confirmado pelo Augusto em 09/10/2026). Cada LP tem mensagem própria
+// e um código de origem no fim, para o comercial saber de qual página o contato veio e já
+// começar a conversa no tom certo (pedido do Diego na reunião de 27/10).
 const NUMERO = "5511988093216";
-const MENSAGEM = "Olá! Vi a matéria com Fernando Miranda e quero conhecer a franquia Pizza Prime.";
-export const WHATSAPP_URL = `https://wa.me/${NUMERO}?text=${encodeURIComponent(MENSAGEM)}`;
+const MENSAGENS: Record<string, string> = {
+  franquia: "Olá! Vi a matéria com Fernando Miranda e quero conhecer a franquia Pizza Prime. (origem: /franquia)",
+  negocio: "Olá! Sou do mercado de alimentação e quero saber mais sobre a Pizza Prime. (origem: /negocio)",
+  oportunidade: "Olá! Vi os números da Pizza Prime e quero saber mais sobre a franquia. (origem: /oportunidade)",
+};
+export const whatsappUrl = (lp = "negocio") =>
+  `https://wa.me/${NUMERO}?text=${encodeURIComponent(MENSAGENS[lp] ?? MENSAGENS.negocio)}`;
 
 /** Evento do GTM para medir clique no WhatsApp (GA4 + Meta Contact, sem conversão do Google Ads). */
 export const registrarCliqueWhatsApp = (local: string, lp = "negocio") => {
@@ -26,7 +32,7 @@ export const LinkWhatsApp = ({
   lp?: string;
 }) => (
   <a
-    href={WHATSAPP_URL}
+    href={whatsappUrl(lp)}
     target="_blank"
     rel="noopener noreferrer"
     onClick={() => registrarCliqueWhatsApp(local, lp)}

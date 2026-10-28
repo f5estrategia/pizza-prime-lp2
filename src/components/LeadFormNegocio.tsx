@@ -60,7 +60,8 @@ const Chips = ({
 const LeadFormNegocio = ({
   identificador = "formulario-lp-negocio",
   lp = "negocio",
-}: { identificador?: string; lp?: string } = {}) => {
+  soEtapa = false,
+}: { identificador?: string; lp?: string; soEtapa?: boolean } = {}) => {
   const [etapa, setEtapa] = useState<1 | 2>(1);
   const [erro, setErro] = useState("");
   const { formData, setCampo, isSubmitting, enviado, erroEnvio, enviar } = useLeadSubmission({
@@ -100,10 +101,15 @@ const LeadFormNegocio = ({
   return (
     <div className="rounded-2xl bg-[#111]/95 border-2 border-secondary/70 p-5 sm:p-7 shadow-2xl">
       <h2 className="font-display uppercase text-white text-2xl sm:text-3xl leading-tight text-center">Fale com o time de expansão</h2>
+      {/* soEtapa: só "Etapa X de 2", sem o texto de apoio (pedido para a /franquia em 28/10). */}
+      {soEtapa ? (
+        <p className="text-center text-sm text-white/55 mt-1 mb-4">Etapa {etapa} de 2</p>
+      ) : (
       <p className="text-center text-sm text-white/65 mt-1 mb-4">
         {etapa === 1 ? "Tire suas dúvidas sobre investimento, operação e disponibilidade na sua cidade." : "Falta pouco: sobre a sua unidade."}
         <span className="text-white/45"> Etapa {etapa} de 2 · * campos obrigatórios</span>
       </p>
+      )}
       <div className="h-1 rounded-full bg-white/10 mb-5" aria-hidden="true">
         <div className={`h-1 rounded-full bg-secondary transition-all ${etapa === 1 ? "w-1/2" : "w-full"}`} />
       </div>

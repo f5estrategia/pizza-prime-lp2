@@ -109,3 +109,52 @@
 .font-display {
   font-weight: 400;
 }
+
+/* Montserrat 800 servida pelo próprio site (19 KB, só latim) e pré-carregada no HTML da
+   /franquia pelo postbuild: vinda do Google, ela atrasava a headline em ~0,3 s no celular. */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("./assets/fonts/montserrat-800-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* /franquia: títulos em Montserrat ExtraBold, mais aberta que a Anton (pedido de 28/10:
+   a Anton ficou quadrada e junta demais para leitura). As outras páginas seguem na Anton. */
+.lp-franquia .font-display {
+  font-family: "Montserrat", "Arial Black", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* /franquia: animações. Fluxo nos raios do ecossistema, anel girando devagar, pulso no
+   centro e entrada suave dos blocos ao rolar. A classe .anim só entra via JS, então sem
+   JS (ou na página pré-renderizada) tudo aparece normalmente. */
+@keyframes pp-fluxo { to { stroke-dashoffset: -36; } }
+@keyframes pp-girar { to { transform: rotate(360deg); } }
+@keyframes pp-pulso {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.28); opacity: 0; }
+}
+.lp-franquia .pp-fluxo { animation: pp-fluxo 1.4s linear infinite; }
+.lp-franquia .pp-girar { animation: pp-girar 80s linear infinite; transform-box: fill-box; transform-origin: center; }
+.lp-franquia .pp-pulso { animation: pp-pulso 2.6s ease-out infinite; }
+@keyframes pp-popup { from { opacity: 0; } to { opacity: 1; } }
+.lp-franquia .pp-popup { animation: pp-popup 0.2s ease-out; }
+@keyframes pp-fluxo-v { to { background-position: 0 24px; } }
+.lp-franquia .pp-fluxo-v {
+  background: repeating-linear-gradient(to bottom, #fcc90d 0 8px, transparent 8px 24px);
+  animation: pp-fluxo-v 1s linear infinite;
+}
+.lp-franquia.anim [data-revelar] {
+  opacity: 0;
+  transform: translateY(18px) scale(0.97);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s, color 0.2s;
+}
+.lp-franquia.anim [data-revelar].visivel { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lp-franquia .pp-fluxo, .lp-franquia .pp-girar, .lp-franquia .pp-pulso, .lp-franquia .pp-fluxo-v { animation: none; }
+  .lp-franquia.anim [data-revelar] { opacity: 1; transform: none; transition: none; }
+}

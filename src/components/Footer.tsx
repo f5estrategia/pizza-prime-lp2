@@ -17,8 +17,9 @@ const Footer = () => (
           >
             <Mail className="w-4 h-4" /> expansao@pizzaprime.com.br
           </a>
-          <span className="flex items-center gap-2">
-            <MapPin className="w-4 h-4" /> Av. Conceição, 2940 - Cidade Nova II, Indaiatuba - SP, CEP 13334-345
+          {/* No celular o endereço quebra em duas linhas: ícone em cima, para o texto ficar centralizado. */}
+          <span className="flex flex-col md:flex-row items-center gap-1 md:gap-2">
+            <MapPin className="w-4 h-4 shrink-0" /> Av. Conceição, 2940 - Cidade Nova II, Indaiatuba - SP, CEP 13334-345
           </span>
         </div>
       </div>

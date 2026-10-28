@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 // As rotas sao carregadas sob demanda (React.lazy), para a /negocio nao baixar
@@ -62,7 +62,7 @@ const PAGINAS = [
     modulo: "src/pages/Franquia.tsx",
     title: "Franquia Pizza Prime | Seu próximo grande negócio começa aqui",
     description:
-      "Pizza vende 365 dias por ano. Entre em uma das maiores redes de pizzarias do Brasil: +100 unidades, suporte do primeiro passo em diante e o modelo Delivery por R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
+      "Pizza vende todos os dias. Entre na maior rede brasileira de pizzarias: +100 unidades, suporte do primeiro passo em diante e o modelo Delivery por R$ 249 mil + R$ 50 mil de capital de giro. Fale com o time de expansão.",
   },
 ];
 
@@ -83,6 +83,12 @@ for (const p of PAGINAS) {
   html = trocar(html, /(<meta name="twitter:title" content=")[^"]*"/, `$1${p.title}"`, "twitter:title");
   html = trocar(html, /(<meta name="twitter:description" content=")[^"]*"/, `$1${p.description}"`, "twitter:description");
   html = trocar(html, /<div id="root"><\/div>/, `<div id="root">${corpo}</div>`, `<div id="root">`);
+  // A /franquia usa Montserrat nos títulos (headline inclusive): pré-carregar evita a troca tardia de fonte.
+  if (p.rota === "/franquia") {
+    const fonte = readdirSync("dist/assets").find((f) => /^montserrat-800-latin-.*\.woff2$/.test(f));
+    if (!fonte) throw new Error("postbuild: não achei a Montserrat em dist/assets");
+    html = html.replace("</head>", `    <link rel="preload" as="font" type="font/woff2" crossorigin href="${base}assets/${fonte}">\n  </head>`);
+  }
   mkdirSync(`dist${p.rota}`, { recursive: true });
   writeFileSync(`dist${p.rota}/index.html`, html);
 }
