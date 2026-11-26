@@ -73,9 +73,9 @@ export async function POST(req: Request) {
   }
   if (!lead.nome || !lead.email || !lead.telefone) return json(req, 400, { ok: false });
 
-  // O RD corre em paralelo com a planilha, mas só a planilha decide a resposta:
-  // se o RD cair, o lead continua salvo e o formulário confirma o envio.
-  const rd = enviarParaRd(lead);
+  // RD e CRM correm em paralelo com a planilha, mas só a planilha decide a resposta:
+  // se um deles cair, o lead continua salvo e o formulário confirma o envio.
+  const envios = Promise.all([enviarParaRd(lead), enviarParaCrm(lead)]);
 
   try {
     // text/plain: o Apps Script le o corpo via e.postData.contents, como antes.
@@ -87,12 +87,93 @@ export async function POST(req: Request) {
     if (!r.ok) throw new Error("Apps Script respondeu " + r.status);
   } catch (err) {
     console.error("Falha ao gravar o lead na planilha:", err);
-    await rd;
+    await envios;
     return json(req, 502, { ok: false });
   }
 
-  await rd;
+  await envios;
   return json(req, 200, { ok: true });
+}
+
+// ------------------------------------------------------------- CRM do cliente
+// Mesmo endpoint que o formulário embedado do CRM usa (receive-lead, público).
+// Envia daqui em vez de trocar o form pelo iframe: o iframe não aceita o visual
+// das LPs e, depois do envio, leva a página para outro site, o que quebra o
+// disparo das conversões. As opções seguem as do formulário do CRM.
+
+const CRM_ENDPOINT =
+  process.env.CRM_ENDPOINT || "https://mqkmmsrmauqebllmiikl.supabase.co/functions/v1/receive-lead";
+const CRM_FORM_ID = process.env.CRM_FORM_ID || "90782e11-cdb3-4b81-9879-d6d65d3a40e1";
+
+// source e form_name iguais aos do iframe (o CRM pode distribuir por eles, inclusive o
+// espaço no fim do nome); a LP de origem vai em landing_page, como o iframe faz.
+const PAGINA_CRM: Record<string, string> = {
+  "formulario-lp-franquia": "/",
+  "formulario-lp-franquia-folheto": "/franquia",
+  "formulario-lp-negocio": "/negocio",
+  "formulario-lp-oportunidade": "/oportunidade",
+};
+
+const OBJETIVO_CRM: Record<string, string> = {
+  operar: "Quero abrir uma franquia e operar o negócio",
+  investir: "Quero investir e contratar gestão e funcionários",
+  mercado: "Buscar informações sobre o mercado de food service",
+  outros: "Outros",
+};
+
+// LP principal já usa as faixas do CRM (sem o "De "); as LPs de negócio têm faixas próprias.
+const CAPITAL_CRM: Record<string, string> = {
+  "Ainda não tenho o capital": "Menos de R$ 100 mil",
+  "Até R$ 199 mil": "De R$ 100 mil a R$ 200 mil",
+  "R$ 200 a 250 mil": "De R$ 200 mil a R$ 300 mil",
+  "R$ 250 a 350 mil": "De R$ 300 mil a R$ 400 mil",
+  "Acima de R$ 350 mil": "De R$ 300 mil a R$ 400 mil",
+};
+
+const PRAZO_CRM: Record<string, string> = {
+  "Até 3 meses": "Imediato",
+  "3 a 6 meses": "3-6 meses",
+  "6 a 12 meses": "6-12 meses",
+};
+
+const capitalCrm = (v: string) => CAPITAL_CRM[v] || (/^R\$ \d/.test(v) ? "De " + v : v);
+
+async function enviarParaCrm(lead: Record<string, string>): Promise<void> {
+  if (process.env.CRM_DESLIGADO === "1") return;
+
+  const payload: Record<string, string> = {
+    nome: lead.nome,
+    email: lead.email,
+    phone: lead.telefone.replace(/\D/g, ""),
+    objetivo: OBJETIVO_CRM[lead.objetivo] || lead.objetivo,
+    cidade: lead.cidade,
+    capital_disponivel: capitalCrm(lead.capital),
+    prazo: PRAZO_CRM[lead.prazo] || lead.prazo,
+    utm_source: lead.utm_source,
+    utm_medium: lead.utm_medium,
+    utm_campaign: lead.utm_campaign,
+    utm_content: lead.utm_content,
+    utm_term: lead.utm_term,
+    gclid: lead.gclid,
+    fbclid: lead.fbclid,
+    landing_page: "https://lp.pizzaprime.com.br" + (PAGINA_CRM[lead.identificador] || "/"),
+    source: "LP Seja um franqueado",
+    form_id: CRM_FORM_ID,
+    form_name: "Seja um franqueado ",
+  };
+  for (const k of Object.keys(payload)) if (!payload[k]) delete payload[k];
+
+  try {
+    const r = await fetch(CRM_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!r.ok) console.error("CRM respondeu", r.status, (await r.text()).slice(0, 300));
+  } catch (err) {
+    console.error("Falha ao enviar o lead ao CRM:", err);
+  }
 }
 
 // ------------------------------------------------------------- RD Station
